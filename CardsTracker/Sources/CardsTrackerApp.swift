@@ -4,7 +4,7 @@ import SwiftUI
 struct CardsTrackerApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ListView()
         }
     }
 }
