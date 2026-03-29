@@ -1,0 +1,65 @@
+[
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440010",
+    "merchantName": "Confiteria Paris",
+    "date": 1773100800,
+    "amount": 254700,
+    "currency": "ARS",
+    "cardId": "550e8400-e29b-41d4-a716-446655440000",
+    "category": "restaurant"
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440011",
+    "merchantName": "Pedidos Ya",
+    "date": 1772409600,
+    "amount": 3723000,
+    "currency": "ARS",
+    "cardId": "550e8400-e29b-41d4-a716-446655440000",
+    "category": "delivery"
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440012",
+    "merchantName": "Disney Plus",
+    "date": 1772150400,
+    "amount": 659900,
+    "currency": "ARS",
+    "cardId": "550e8400-e29b-41d4-a716-446655440000",
+    "category": "streaming"
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440013",
+    "merchantName": "La Cabrera",
+    "date": 1773792000,
+    "amount": 4850000,
+    "currency": "ARS",
+    "cardId": "550e8400-e29b-41d4-a716-446655440000",
+    "category": "restaurant"
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440020",
+    "merchantName": "Mercado Libre",
+    "date": 1773532800,
+    "amount": 18990000,
+    "currency": "ARS",
+    "cardId": "550e8400-e29b-41d4-a716-446655440001",
+    "category": "shopping"
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440021",
+    "merchantName": "Spotify",
+    "date": 1772323200,
+    "amount": 499900,
+    "currency": "ARS",
+    "cardId": "550e8400-e29b-41d4-a716-446655440001",
+    "category": "streaming"
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440030",
+    "merchantName": "YPF",
+    "date": 1773964800,
+    "amount": 12400000,
+    "currency": "ARS",
+    "cardId": "550e8400-e29b-41d4-a716-446655440002",
+    "category": "other"
+  }
+]

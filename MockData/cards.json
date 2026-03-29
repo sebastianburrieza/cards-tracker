@@ -1,0 +1,32 @@
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "type": "creditPlastic",
+    "color": "GREEN",
+    "holderName": "Sebastian A Burrieza",
+    "limit": 220000000,
+    "available": 33250000,
+    "closingDate": 1775347200,
+    "dueDate": 1775952000
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440001",
+    "type": "creditPlastic",
+    "color": "PURPLE",
+    "holderName": "Sebastian A Burrieza",
+    "limit": 200000000,
+    "available": 183250000,
+    "closingDate": 1775779200,
+    "dueDate": 1776384000
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440002",
+    "type": "debitPlastic",
+    "color": "ORANGE",
+    "holderName": "Catalina Burrieza",
+    "limit": 20000000,
+    "available": 0,
+    "closingDate": 1777507200,
+    "dueDate": 1777507200
+  }
+]
