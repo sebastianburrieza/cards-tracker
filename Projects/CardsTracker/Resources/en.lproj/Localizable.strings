@@ -1,0 +1,13 @@
+/* App */
+"appTitle" = "Cards Tracker";
+
+/* Card List */
+"card.list.title" = "Cards tracker";
+"card.dueDate.singular" = "1 day until due date";
+"card.dueDate.plural" = "%d days until due date";
+
+/* Card Detail */
+"card.detail.consumos" = "Consumos";
+"card.detail.disponible" = "Disponible %@";
+"card.detail.pausar" = "Pausar";
+"card.detail.reportar" = "Reportar";
