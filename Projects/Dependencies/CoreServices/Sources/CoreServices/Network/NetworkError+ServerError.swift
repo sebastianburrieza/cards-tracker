@@ -5,7 +5,7 @@ extension NetworkError {
     /// Maps a transport-layer error into a domain-level `ServerError`
     /// so repositories can return `Result<T, ServerError>` without
     /// leaking `NetworkError` into the rest of the app.
-    func asServerError() -> ServerError {
+    public func asServerError() -> ServerError {
         switch self {
         case .invalidURL:
             return ServerError(.unexpectedError, title: "Invalid request")

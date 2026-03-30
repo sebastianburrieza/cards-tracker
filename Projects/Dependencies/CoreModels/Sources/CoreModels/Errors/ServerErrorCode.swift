@@ -6,6 +6,7 @@ public enum ServerErrorCode: Int, CaseIterable {
     // MARK: - Generic (client-side)
     case unexpectedError    = -2
     case connectionError    = -1
+    case invalidURL         = -3
 
     // MARK: - Auth
     case unauthorized       = 401

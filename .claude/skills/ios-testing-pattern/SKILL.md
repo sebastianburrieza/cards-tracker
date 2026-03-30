@@ -184,7 +184,8 @@ func testConfirmPurchaseFailure() async {
 }
 ```
 
-### Testing that ViewModel calls service correctly
+### Testing that ViewModel calls repository correctly
+
 
 ```swift
 func test_confirmPurchase_callsServiceWithCorrectCardId() async {
@@ -197,6 +198,12 @@ func test_confirmPurchase_callsServiceWithCorrectCardId() async {
     XCTAssertEqual(repository.lastCreatedCardId, "abc-xyz")
     XCTAssertEqual(repository.createSubscriptionCallCount, 1)
 }
+```
+
+### Conform to protocol to replace the live implementation with a mock in unit tests
+
+```swift
+    Container.shared.cardsRepository.register { MockCardsRepository() }
 ```
 
 ## Test File Structure
