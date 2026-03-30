@@ -34,6 +34,7 @@ final class CardDetailViewModel: ObservableObject {
         await MainActor.run {
             isLoading = true
         }
+        defer { isLoading = false }
         
         transactions = (try? await repository.fetchTransactions(for: card.id)) ?? []
         

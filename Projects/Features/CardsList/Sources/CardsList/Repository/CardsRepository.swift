@@ -12,10 +12,11 @@ import CoreServices
 ///
 /// Swap the URLs for a real API without touching any feature-layer code.
 final class CardsRepository: CardsRepositoryProtocol {
+    
+    private let baseUrl: String = "https://raw.githubusercontent.com/sebastianburrieza/cards-tracker"
 
     private enum Endpoint {
-        static let cards = URL(
-            string: "https://raw.githubusercontent.com/sebastianburrieza/cards-tracker/main/MockData/cards.json"
+        static let cards = URL(string: "/main/MockData/cards.json"
         )!
         static let transactions = URL(
             string: "https://raw.githubusercontent.com/sebastianburrieza/cards-tracker/main/MockData/transactions.json"
