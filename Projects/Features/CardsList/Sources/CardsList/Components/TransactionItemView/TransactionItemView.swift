@@ -12,8 +12,8 @@ struct TransactionItemView: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: viewModel.categoryIcon)
-                .font(.system(size: 22, weight: .regular))
-                .foregroundColor(Palette.grayUltraDark.swiftUI)
+                .font(.system(size: 24, weight: .medium))
+                .foregroundColor(viewModel.categoryColor)
                 .frame(width: 32)
 
             VStack(alignment: .leading, spacing: 2) {

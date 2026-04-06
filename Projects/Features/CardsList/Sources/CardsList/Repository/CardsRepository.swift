@@ -40,8 +40,9 @@ final class CardsRepository: CardsRepositoryProtocol {
         guard let url = RequestPath.cards.url else {
             return .failure(ServerError(.invalidURL))
         }
+        let request = URLRequest(url: url)
         do {
-            let cards = try await networkService.fetch([Card].self, from: url)
+            let cards = try await networkService.request([Card].self, for: request)
             return .success(cards)
         } catch let error as ServerError {
             return .failure(error)
@@ -56,8 +57,9 @@ final class CardsRepository: CardsRepositoryProtocol {
         guard let url = RequestPath.transactions.url else {
             return .failure(ServerError(.invalidURL))
         }
+        let request = URLRequest(url: url)
         do {
-            let all = try await networkService.fetch([Transaction].self, from: url)
+            let all = try await networkService.request([Transaction].self, for: request)
             return .success(all.filter { $0.cardId == cardId })
         } catch let error as ServerError {
             return .failure(error)

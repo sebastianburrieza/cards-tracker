@@ -36,7 +36,7 @@ public struct NavigationBarView: View {
             }
         }
         .frame(height: navigationBarHeight)
-        .padding(.horizontal, 20)
+        .padding(.leading, 20)
         .padding(.bottom, 10)
     }
 }
@@ -97,7 +97,6 @@ struct CloseButtonView: View {
             }
         )
         .accessibilityLabel("Cerrar")
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -124,6 +123,5 @@ struct BackButtonView: View {
             }
         )
         .accessibilityLabel("Atrás")
-        .frame(maxWidth: 40, alignment: .leading)
     }
 }

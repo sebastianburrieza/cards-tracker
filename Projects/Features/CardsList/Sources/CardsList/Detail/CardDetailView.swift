@@ -17,10 +17,9 @@ struct CardDetailView: View {
             background
                 .ignoresSafeArea()
 
-            VStack(spacing: 0) {
+            VStack(spacing: 20) {
 
                 transactionsList
-                    .padding(.top, 20)
             }
         }
         .safeAreaInset(edge: .top) {
@@ -64,13 +63,20 @@ struct CardDetailView: View {
             middleView: Text(viewModel.card.holderName)
                 .font(Fonts.medium(size: 18))
                 .foregroundColor(Palette.grayUltraDark.swiftUI),
-            rightView: CardView(
-                type: viewModel.card.type,
-                color: viewModel.card.color,
-                hexa: viewModel.card.hexa,
-                size: 36,
-                isShadow: false
-            )
+            rightView: cardView
+                .onTapGesture {
+                    viewModel.delegate?.navigateToPrevious()
+                }
+        )
+    }
+    
+    private var cardView: some View {
+        CardView(
+            type: viewModel.card.type,
+            color: viewModel.card.color,
+            hexa: viewModel.card.hexa,
+            size: 36,
+            isShadow: false
         )
     }
 

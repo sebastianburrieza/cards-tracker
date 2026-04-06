@@ -2,6 +2,8 @@
 //  Created by Sebastian Burrieza on 01/04/2026.
 
 import Foundation
+import SwiftUI
+import ResourcesUI
 import CoreModels
 
 struct Transaction: Identifiable, Hashable, Codable {
@@ -63,6 +65,16 @@ enum TransactionCategory: String, Hashable, Codable {
         case .streaming:  return "film"
         case .shopping:   return "bag"
         case .other:      return "creditcard"
+        }
+    }
+    
+    var color: Color {
+        switch self {
+        case .restaurant: return Palette.blue.swiftUI
+        case .delivery:   return Palette.red.swiftUI
+        case .streaming:  return Palette.yellow.swiftUI
+        case .shopping:   return Palette.violet.swiftUI
+        case .other:      return Palette.orange.swiftUI
         }
     }
 }

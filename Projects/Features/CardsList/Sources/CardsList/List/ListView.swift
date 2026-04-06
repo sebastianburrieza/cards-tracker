@@ -10,7 +10,7 @@ import CoreModels
 
 struct ListView: View {
 
-    @ObservedObject var viewModel: ListViewModel
+    @State var viewModel: ListViewModel
 
     var body: some View {
         ZStack {

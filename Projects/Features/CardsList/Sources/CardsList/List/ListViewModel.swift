@@ -13,12 +13,13 @@ protocol ListNavigationDelegate: AnyObject {
     func showError(_ error: ServerError)
 }
 
-final class ListViewModel: ObservableObject {
+@Observable
+final class ListViewModel {
 
-    @Published var cards: [Card] = []
-    @Published var isLoading = false
+    var cards: [Card] = []
+    var isLoading = false
 
-    @Injected(\.cardsRepository) private var repository
+    @Injected(\.cardsRepository) @ObservationIgnored private var repository
 
     weak var delegate: ListNavigationDelegate?
 

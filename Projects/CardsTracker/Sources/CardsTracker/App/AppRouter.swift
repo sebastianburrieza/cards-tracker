@@ -46,7 +46,7 @@ final class AppRouter {
         Container.shared.routerService().configure(
             router: router,
             failureHandler: { routeId in
-                assertionFailure("🛑 No handler registered for route: '\(routeId)'. Did you register it in AppRouter.registerAllRouteHandlers()?")
+                assertionFailure("🛑 No handler registered for route: '\(routeId)'")
             }
         )
     }

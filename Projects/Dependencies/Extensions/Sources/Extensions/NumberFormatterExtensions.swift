@@ -39,7 +39,10 @@ extension NumberFormatter {
         return formatter.currencyDecimalSeparator
     }
 
-    public static func formatValue(_ value: Double, currency: Currency? = nil, options: [FormatterOption] = [], locale: Locale = Locale.current) -> String {
+    public static func formatValue(_ value: Double,
+                                   currency: Currency? = nil,
+                                   options: [FormatterOption] = [],
+                                   locale: Locale = Locale.current) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.locale = locale
@@ -91,7 +94,10 @@ extension NumberFormatter {
         }
     }
 
-    public static func formatValue(_ value: Int, currency: Currency? = nil, options: [FormatterOption] = [], locale: Locale = Locale.current) -> String {
+    public static func formatValue(_ value: Int,
+                                   currency: Currency? = nil,
+                                   options: [FormatterOption] = [],
+                                   locale: Locale = Locale.current) -> String {
         let amount = convertToAmount(value)
         return formatValue(amount, currency: currency, options: options, locale: locale)
     }

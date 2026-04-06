@@ -28,7 +28,9 @@ public struct ServerError: Error {
 
 public extension ServerError {
     /// Generic connection error — use when the device is offline or the request timed out.
-    static let connection = ServerError(.connectionError, title: "Connection error", message: "Check your internet connection and try again.")
+    static let connection = ServerError(.connectionError,
+                                        title: "Connection error",
+                                        message: "Check your internet connection and try again.")
     /// Fallback error for unrecognized backend responses.
     static let unexpected = ServerError(.unexpectedError, title: "Something went wrong", message: "Please try again later.")
 }
