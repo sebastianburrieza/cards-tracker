@@ -10,6 +10,8 @@ import Extensions
 protocol CardDetailNavigationDelegate: AnyObject {
     /// Called when the user taps the back button.
     func navigateToPrevious()
+    /// Called when the user taps a transaction row.
+    func navigateToTransactionDetail(id: String)
 }
 
 final class CardDetailViewModel: ObservableObject {

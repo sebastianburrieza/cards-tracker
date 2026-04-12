@@ -14,9 +14,9 @@ public final class ListCoordinator: CoordinatorProtocol {
     
     public var childCoordinators = [any CoordinatorProtocol]()
     public var navigationController: UINavigationController
-    public var router: RouterProtocol
+    public var router: RouterServiceProtocol
 
-    public init(navigationController: UINavigationController, router: RouterProtocol) {
+    public init(navigationController: UINavigationController, router: RouterServiceProtocol) {
         self.navigationController = navigationController
         self.router = router
     }
@@ -42,30 +42,4 @@ public final class ListCoordinator: CoordinatorProtocol {
             return coordinator.start()
         }
     }
-    
-//    func navigateToRoute(_ route: any RouteType, navigationType: NavigationType) {
-//        let controller = build(route)
-//        switch navigationType {
-//        case .push(let animated):
-//            router.push(controller, animated: animated)
-//        case .present:
-//            router.present(controller, animated: true, modalPresentationStyle: .fullScreen)
-//        case .presentWithAutomaticModal(_):
-//            router.presentWithAutomaticModal(controller, animated: true)
-//        case .setRoot:
-//            break
-//        }
-//    }
-
-//    private func build(_ route: RouteType) -> UIViewController {
-//        switch route {
-//        case .home:
-//            let view = HomeView(router: self)
-//            return UIHostingController(rootView: view)
-//
-//        case .detail(let card):
-//            let view = DetailView(id: id, router: self)
-//            return UIHostingController(rootView: view)
-//        }
-//    }
 }

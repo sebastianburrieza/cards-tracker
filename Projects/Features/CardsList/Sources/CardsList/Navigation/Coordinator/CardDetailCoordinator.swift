@@ -5,6 +5,7 @@ import UIKit
 import SwiftUI
 import Navigation
 import CardsListInterface
+import CardsTransactionDetailInterface
 
 final class CardDetailCoordinator: CoordinatorProtocol {
 
@@ -14,10 +15,10 @@ final class CardDetailCoordinator: CoordinatorProtocol {
     
     var childCoordinators = [any CoordinatorProtocol]()
     var navigationController: UINavigationController
-    var router: RouterProtocol
+    var router: RouterServiceProtocol
     private let card: Card
 
-    init(navigationController: UINavigationController, router: RouterProtocol, card: Card) {
+    init(navigationController: UINavigationController, router: RouterServiceProtocol, card: Card) {
         self.navigationController = navigationController
         self.router = router
         self.card = card

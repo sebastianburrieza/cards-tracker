@@ -32,7 +32,7 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate {
         UNUserNotificationCenter.current().delegate = self
 
         // Configure routing services before any navigation occurs.
-        AppRouter.setup(router: appCoordinator.router)
+        AppRouter.setup(routerService: appCoordinator.router)
 
         // Queue cold-start triggers so they execute once the window is ready.
         if let response = connectionOptions.notificationResponse {

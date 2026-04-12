@@ -2,22 +2,23 @@
 //  Created by Sebastian Burrieza on 01/04/2026.
 
 import UIKit
+import Factory
 import Navigation
 import CardsList
 
 final class AppCoordinator: CoordinatorProtocol {
-    
+
     enum Steps {
         case list
     }
-    
+
     var childCoordinators = [any CoordinatorProtocol]()
     var navigationController: UINavigationController
-    var router: RouterProtocol
+    var router: RouterServiceProtocol
 
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
-        self.router = Router(navigationController: navigationController)
+        self.router = Container.shared.routerService()
     }
 
     func start() -> UIViewController {
@@ -36,7 +37,4 @@ final class AppCoordinator: CoordinatorProtocol {
 
     }
     
-//    func navigateToRoute(_ route: any RouteType, navigationType: NavigationType) {
-//
-//    }
 }

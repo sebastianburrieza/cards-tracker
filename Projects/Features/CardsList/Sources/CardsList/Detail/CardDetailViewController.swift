@@ -3,6 +3,7 @@
 
 import UIKit
 import SwiftUI
+import CardsTransactionDetailInterface
 
 final class CardDetailViewController: UIHostingController<CardDetailView> {
     
@@ -37,13 +38,16 @@ final class CardDetailViewController: UIHostingController<CardDetailView> {
 }
 
 extension CardDetailViewController: CardDetailNavigationDelegate {
-    
+
     func navigateToPrevious() {
         coordinator?.navigateToPrevious(true)
     }
-    
-//    func endFlow() {
-//        coordinator?.endFlow?()
-//    }
+
+    func navigateToTransactionDetail(id: String) {
+        let route = CardsTransactionDetailRoute(transactionId: id)
+        Task { @MainActor in
+            await coordinator?.navigateToRoute(route, navigationType: .present(.overFullScreen, false))
+        }
+    }
 }
 

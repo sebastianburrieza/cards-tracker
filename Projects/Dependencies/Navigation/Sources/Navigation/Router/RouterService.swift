@@ -6,10 +6,6 @@ import UIKit
 /// Defines the interface for configuring, registering route handlers, and navigating to routes.
 public protocol RouterServiceProtocol {
 
-    /// Attaches the root router and an optional failure handler.
-    /// Must be called from `AppRouter.setup()` before any navigation occurs.
-    func configure(router: any RouterProtocol, failureHandler: ((String) -> Void)?)
-
     /// Registers a route handler for one or more routes.
     func register(routeHandler: any RouteHandler)
 
@@ -19,7 +15,15 @@ public protocol RouterServiceProtocol {
 
     /// Builds and navigates to the given route using the specified navigation type.
     @MainActor
-    func navigate(to route: any Route, navigationType: NavigationType) async
+    func navigate(to route: any Route, fromCoordinator: (any CoordinatorProtocol)?, navigationType: NavigationType) async
+}
+
+extension RouterServiceProtocol {
+    public func navigate(to route: any Route,
+                         fromCoordinator: (any CoordinatorProtocol)? = nil,
+                         navigationType: NavigationType) async {
+        await navigate(to: route, fromCoordinator: fromCoordinator, navigationType: .push(true))
+    }
 }
 
 /// Central routing service that maps route identifiers to their handlers.
@@ -41,18 +45,10 @@ public final class RouterService: RouterServiceProtocol {
     private var handlers: [String: any RouteHandler] = [:]
     private var failureHandler: ((String) -> Void)?
 
-    /// Weak reference to avoid retaining the navigation hierarchy.
-    private weak var router: (any RouterProtocol)?
-
-    public init() {}
-
-    // MARK: - Configuration
-
     /// Configures the instance with a router and optional failure handler.
     /// Must be called from `AppRouter.setup()` before any navigation occurs.
-    public func configure(router: any RouterProtocol, failureHandler: ((String) -> Void)? = nil) {
-        self.router = router
-        self.failureHandler = failureHandler
+    public init(failureHandler: ((String) -> Void)? = nil) {
+        self.failureHandler = failureHandler ?? { _ in }
     }
 
     // MARK: - Registration
@@ -84,8 +80,28 @@ public final class RouterService: RouterServiceProtocol {
     /// Used primarily by ``DeepLinkAction`` implementations to trigger navigation
     /// from any module without a direct reference to the coordinator or router.
     @MainActor
-    public func navigate(to route: any Route, navigationType: NavigationType = .push(true)) async {
-        guard let vc = await buildController(for: route) else { return }
-        router?.navigate(toRoute: route, fromView: vc, navigationType: navigationType)
+    public func navigate(to route: any Route,
+                         fromCoordinator: (any CoordinatorProtocol)?,
+                         navigationType: NavigationType = .push(true)) async {
+        guard let controller = await buildController(for: route) else { return }
+
+        let navigationController = fromCoordinator?.navigationController ?? UINavigationController()
+        performNavigation(to: controller, fromNavigation: navigationController, style: navigationType)
     }
+    
+    func performNavigation(to controller: UIViewController, fromNavigation: UINavigationController, style navigationType: NavigationType) {
+        guard let fromController = fromNavigation.viewControllers.last else { return }
+        switch navigationType {
+        case .push(let animated):
+                fromController.navigationController?.pushViewController(controller, animated: animated)
+        case .present(let modalStyle, let animated):
+            controller.modalPresentationStyle = modalStyle
+            fromController.navigationController?.present(controller, animated: animated)
+        case .presentWithAutomaticModal(let animated):
+            fromController.navigationController?.present(controller, animated: animated)
+        case .setRoot:
+            fromNavigation.popToRootViewController(animated: true)
+        }
+    }
+    
 }

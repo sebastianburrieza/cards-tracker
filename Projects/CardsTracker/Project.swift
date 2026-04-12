@@ -27,12 +27,14 @@ let project = Project(
             dependencies: [
                 .external(name: "Factory"),
                 Dependency.navigation.target,
-                Feature.cardsList.target
+                Feature.cardsList.target,
+                Feature.cardsTransactionDetail.target
             ]
         ),
         .unitTest(name: "CardsTracker", dependencies: [
             Dependency.navigation.target,
-            Feature.cardsList.target
+            Feature.cardsList.target,
+            Feature.cardsTransactionDetail.target
         ])
     ],
     resourceSynthesizers: []
