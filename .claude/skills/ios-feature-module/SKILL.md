@@ -69,26 +69,42 @@ Projects/Features/{{FeatureName}}/
 
 ## Step 4: Register the Feature
 
-After creating all files, make these two edits:
+Before editing, **read both files first** to understand their current structure:
 
-**1. `Tuist/ProjectDescriptionHelpers/Features.swift`** — add a new case to the `Feature` enum:
+```
+Read: Tuist/ProjectDescriptionHelpers/Features.swift
+Read: Projects/CardsTracker/Sources/CardsTracker/App/AppRouter.swift
+```
+
+Then make the edits:
+
+**1. `Tuist/ProjectDescriptionHelpers/Features.swift`** — add a new case to the `Feature` enum, following the exact same pattern as existing cases:
 ```swift
 case {{featureName}}
 ```
 
 **2. `Projects/CardsTracker/Sources/CardsTracker/App/AppRouter.swift`** — register the route handler and deep link parser:
-- Add `import {{FeatureName}}` at the top
-- Add `Container.shared.routerService().register(routeHandler: {{FeatureName}}RouteHandler())` in `registerAllRouteHandlers()`
-- Add the deep link parser registration in `registerAllDeepLinkParsers()`
+- Add `import {{FeatureName}}` at the top alongside other feature imports
+- Add `Container.shared.routerService().register(routeHandler: {{FeatureName}}RouteHandler())` in `registerAllRouteHandlers()`, following the same pattern as existing registrations
+- Add the deep link parser registration in `registerAllDeepLinkParsers()`, following the same pattern
 
-## Step 5: Generate the Project
+## Step 5: Verify Created Files
+
+After creating all files, re-read the three most critical ones and verify:
+- `Project.swift` — `{{FeatureName}}` placeholder fully replaced, no leftover `{{` or `}}`
+- `ListViewModel.swift` — uses `@Observable`, has `@ObservationIgnored` before `@Injected`
+- `{{FeatureName}}RouteRegistry.swift` — correct module name in the import
+
+If any placeholder remains unreplaced, fix it before continuing.
+
+## Step 6: Generate the Project
 
 Run:
 ```bash
 cd /path/to/CardsTracker && tuist generate --no-open
 ```
 
-Then confirm to the user that the module is ready and list the files created.
+Then confirm to the user that the module is ready and list all files created.
 
 ## Important Rules
 

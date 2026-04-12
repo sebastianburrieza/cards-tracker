@@ -2,7 +2,6 @@
 //  Created by Sebastian Burrieza on 01/04/2026.
 
 import Foundation
-import CoreModels
 
 struct Transaction: Identifiable, Hashable, Codable {
     let id: String
