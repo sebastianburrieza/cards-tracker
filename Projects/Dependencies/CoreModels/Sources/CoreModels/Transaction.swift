@@ -4,7 +4,6 @@
 import Foundation
 import SwiftUI
 import ResourcesUI
-import CoreModels
 
 struct Transaction: Identifiable, Hashable, Codable {
     let id: String

@@ -1,36 +1,43 @@
 ---
 name: ios-mvvm-pattern
-description: Use when implementing ViewModels, async/await patterns, or delegate communication in iOS projets. Triggers - ViewModel, async/await, delegate, MVVM, navigation delegate, Task, @MainActor.
+description: Use when implementing ViewModels, async/await patterns, or delegate communication in iOS projects. Use this skill whenever the user mentions ViewModel, @Observable, async/await, delegate, MVVM, navigation delegate, Task, @MainActor, or asks to create any new feature screen — even if they don't explicitly mention MVVM.
+
 ---
 
 # MVVM + Async/Await + Delegate Patterns
 
-Apply these patterns when implementing features.
+Apply these patterns when implementing features. This project targets iOS 17+ and uses `@Observable` — do NOT use `ObservableObject` or `@Published`.
 
 ## MVVM Architecture
 
 ### ViewModel Requirements
 
-- Mark ViewModels with `@MainActor` only if it not has async functions
-- Use `@Published` properties for UI-bound state
-- Use `await MainActor.run` for UI-bound state properties that are between an async function call
-- Load data in `viewDidLoad`/`viewWillAppear`, NOT in `init`
-- Keep Views passive - only display data from ViewModel
+- Use `@Observable` macro (iOS 17+) — replaces `ObservableObject` + `@Published`
+- Plain `var` properties are automatically observed — no `@Published` needed
+- Use `@ObservationIgnored` for properties that should NOT trigger observation (e.g. `@Injected` from Factory)
+- Use `await MainActor.run` to update state from async contexts
+- Load data in `viewDidLoad`/`viewWillAppear` or `.task {}`, NOT in `init`
+- Keep Views passive — only display data from ViewModel
+- Always verify all required imports are present when generating new files
 
 ```swift
+import SwiftUI
+import Factory
+import CoreModels
+
 protocol FeatureNavigationDelegate: AnyObject {
     func navigateToDetail(card: Card)
     func showError(_ error: ServerError)
 }
 
-@MainActor
-final class FeatureViewModel: ObservableObject {
-    @Published private(set) var items: [Item] = []
-    @Published private(set) var isLoading = true
-    @Published private(set) var error: ServerError?
+@Observable
+final class FeatureViewModel {
+    var items: [Item] = []
+    var isLoading = false
 
     weak var delegate: FeatureNavigationDelegate?
 
+    @ObservationIgnored
     @Injected(\.cardsRepository) private var repository
 
     init(card: Card) {
@@ -39,10 +46,8 @@ final class FeatureViewModel: ObservableObject {
     }
 
     func fetchData() async {
-        await MainActor.run {
-            isLoading = true
-        }
-        defer { isLoading = false }
+        await MainActor.run { isLoading = true }
+        defer { Task { await MainActor.run { isLoading = false } } }
 
         let result = await repository.fetchItems()
 
@@ -57,6 +62,26 @@ final class FeatureViewModel: ObservableObject {
     }
 }
 ```
+
+### Using @Observable ViewModels in Views
+
+In views that **own** the ViewModel (create it), use `@State`:
+```swift
+struct FeatureView: View {
+    @State private var viewModel = FeatureViewModel()
+    ...
+}
+```
+
+In views that **receive** the ViewModel from outside, use a plain property:
+```swift
+struct FeatureView: View {
+    let viewModel: FeatureViewModel
+    ...
+}
+```
+
+Do NOT use `@ObservedObject` or `@StateObject` — those are for `ObservableObject` only.
 
 ### Model Guidelines
 
@@ -132,7 +157,7 @@ func fetchWithCleanup() async throws -> Data {
 ### Avoid Combine
 
 - Prefer async/await over Combine
-- Use `@Published` only for UI binding
+- Avoid `@Published` — use plain `var` inside `@Observable` classes instead
 - Avoid callbacks when async/await is possible
 
 ## Delegate Pattern
@@ -225,17 +250,25 @@ final class FeatureCoordinator: FeatureNavigationDelegate {
 
 ### ViewModel Checklist
 
-- [ ] `@MainActor` annotation if not async
+- [ ] `@Observable` macro (NOT `ObservableObject`)
 - [ ] `final class` declaration
-- [ ] `ObservableObject` conformance
-- [ ] `@Published private(set)` for state
+- [ ] Plain `var` for observable state (NOT `@Published`)
+- [ ] `@ObservationIgnored` before `@Injected` properties
 - [ ] `weak var delegate` for navigation
 - [ ] No loading in `init`
 - [ ] Async methods for data operations
+- [ ] `await MainActor.run` for UI state updates inside async functions
 - [ ] Proper error handling with delegate
+- [ ] All required imports present at the top of the file
+
+### View Checklist
+
+- [ ] `@State` for ViewModels owned by the View
+- [ ] Plain `let viewModel` for ViewModels passed from outside
+- [ ] No `@ObservedObject` or `@StateObject`
 
 ### Async/Await Checklist
 
 - [ ] `Task` for sync-to-async bridging
 - [ ] `async let` for parallel operations
-- [ ] `@MainActor` or `await MainActor.run` for UI updates
+- [ ] `await MainActor.run` for UI updates inside async contexts
