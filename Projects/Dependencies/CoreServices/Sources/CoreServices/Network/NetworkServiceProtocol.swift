@@ -11,8 +11,8 @@ import Foundation
 /// ```
 public protocol NetworkServiceProtocol {
 
-    /// Fetches data from `url` and decodes it as `T`.
+    /// Request data from `request` and decodes it as `T`.
     ///
     /// - Throws: ``NetworkError`` on HTTP or decoding failures.
-    func fetch<T: Decodable>(_ type: T.Type, from url: URL) async throws -> T
+    func request<T: Decodable>(_ type: T.Type, for request: URLRequest) async throws -> T
 }

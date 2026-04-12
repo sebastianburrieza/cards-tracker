@@ -1,6 +1,7 @@
 ---
 name: ios-mvvm-pattern
 description: Use when implementing ViewModels, async/await patterns, or delegate communication in iOS projects. Use this skill whenever the user mentions ViewModel, @Observable, async/await, delegate, MVVM, navigation delegate, Task, @MainActor, or asks to create any new feature screen — even if they don't explicitly mention MVVM.
+
 ---
 
 # MVVM + Async/Await + Delegate Patterns

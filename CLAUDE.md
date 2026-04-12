@@ -104,6 +104,7 @@ CardsTracker/
 
 ---
 
+
 ## SwiftLint Rules (key thresholds)
 
 - Line length: 130 (warning), 200 (error)
