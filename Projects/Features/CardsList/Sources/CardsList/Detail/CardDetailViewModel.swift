@@ -5,6 +5,7 @@ import SwiftUI
 import Factory
 import Utilities
 import Extensions
+import CoreModels
 
 /// Handles navigation events triggered from the card detail screen.
 protocol CardDetailNavigationDelegate: AnyObject {
@@ -12,6 +13,8 @@ protocol CardDetailNavigationDelegate: AnyObject {
     func navigateToPrevious()
     /// Called when the user taps a transaction row.
     func navigateToTransactionDetail(id: String)
+    /// Called when a data operation fails.
+    func showError(_ error: ServerError)
 }
 
 final class CardDetailViewModel: ObservableObject {
@@ -33,14 +36,18 @@ final class CardDetailViewModel: ObservableObject {
 
     /// Fetches all transactions for this card from the remote endpoint.
     func fetchTransactions() async {
+        await MainActor.run { isLoading = true }
+        defer { isLoading = false }
+
+        let result = await repository.fetchTransactions(for: card.id)
+
         await MainActor.run {
-            isLoading = true
-        }
-        
-        transactions = (try? await repository.fetchTransactions(for: card.id)) ?? []
-        
-        await MainActor.run {
-            isLoading = false
+            switch result {
+            case .success(let transactions):
+                self.transactions = transactions
+            case .failure(let error):
+                delegate?.showError(error)
+            }
         }
     }
 

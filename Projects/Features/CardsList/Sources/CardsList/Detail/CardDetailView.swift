@@ -6,6 +6,7 @@ import Factory
 import ResourcesUI
 import ComponentsUI
 import Utilities
+import CoreModels
 
 struct CardDetailView: View {
 
@@ -16,10 +17,9 @@ struct CardDetailView: View {
             background
                 .ignoresSafeArea()
 
-            VStack(spacing: 0) {
+            VStack(spacing: 20) {
 
                 transactionsList
-                    .padding(.top, 20)
             }
         }
         .safeAreaInset(edge: .top) {
@@ -63,13 +63,20 @@ struct CardDetailView: View {
             middleView: Text(viewModel.card.holderName)
                 .font(Fonts.medium(size: 18))
                 .foregroundColor(Palette.grayUltraDark.swiftUI),
-            rightView: CardView(
-                type: viewModel.card.type,
-                color: viewModel.card.color,
-                hexa: viewModel.card.hexa,
-                size: 36,
-                isShadow: false
-            )
+            rightView: cardView
+                .onTapGesture {
+                    viewModel.delegate?.navigateToPrevious()
+                }
+        )
+    }
+    
+    private var cardView: some View {
+        CardView(
+            type: viewModel.card.type,
+            color: viewModel.card.color,
+            hexa: viewModel.card.hexa,
+            size: 36,
+            isShadow: false
         )
     }
 
@@ -169,9 +176,9 @@ struct CardDetailView_Previews: PreviewProvider {
 }
 
 private final class MockCardsRepositoryForDetail: CardsRepositoryProtocol {
-    func fetchCards() async throws -> [Card] { Card.mocks }
-    func fetchTransactions(for cardId: String) async throws -> [Transaction] {
-        Transaction.mocks.filter { $0.cardId == cardId }
+    func fetchCards() async -> Result<[Card], ServerError> { .success(Card.mocks) }
+    func fetchTransactions(for cardId: String) async -> Result<[Transaction], ServerError> {
+        .success(Transaction.mocks.filter { $0.cardId == cardId })
     }
 }
 #endif

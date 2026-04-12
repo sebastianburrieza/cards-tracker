@@ -18,7 +18,6 @@ public struct Card: Identifiable, Hashable, Codable {
     let limit: Int
     let available: Int
     
-    
     let closingDate: Date
     let dueDate: Date
     

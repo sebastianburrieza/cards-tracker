@@ -6,10 +6,11 @@ import Utilities
 import ComponentsUI
 import ResourcesUI
 import Factory
+import CoreModels
 
 struct ListView: View {
 
-    @ObservedObject var viewModel: ListViewModel
+    @State var viewModel: ListViewModel
 
     var body: some View {
         ZStack {
@@ -85,9 +86,9 @@ struct ListView_Previews: PreviewProvider {
 }
 
 private final class MockCardsRepository: CardsRepositoryProtocol {
-    func fetchCards() async throws -> [Card] { Card.mocks }
-    func fetchTransactions(for cardId: String) async throws -> [Transaction] {
-        Transaction.mocks.filter { $0.cardId == cardId }
+    func fetchCards() async -> Result<[Card], ServerError> { .success(Card.mocks) }
+    func fetchTransactions(for cardId: String) async -> Result<[Transaction], ServerError> {
+        .success(Transaction.mocks.filter { $0.cardId == cardId })
     }
 }
 

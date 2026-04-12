@@ -7,6 +7,7 @@ public extension TargetScript {
     static var swiftLint: TargetScript {
         .pre(
             script: """
+            export PATH="$PATH:/opt/homebrew/bin"
             if which swiftlint > /dev/null; then
                 swiftlint --config "${SRCROOT}/../../../.swiftlint.yml"
             else

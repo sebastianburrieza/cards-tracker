@@ -7,24 +7,29 @@ import Foundation
 ///
 /// Inject a custom `URLSession` in tests to avoid real network calls.
 public final class URLSessionNetworkService: NetworkServiceProtocol {
-
+    
     private let session: URLSession
     private let decoder: JSONDecoder
-
-    public init(session: URLSession = .shared) {
+    private let tokenProvider: () -> String?
+    
+    public init(session: URLSession = .shared, tokenProvider: @escaping () -> String? = { nil }) {
         self.session = session
-
+        self.tokenProvider = tokenProvider
+        
         let decoder = JSONDecoder()
         // Real backends typically send dates as Unix timestamps (seconds since epoch).
-        // e.g. { "date": 1773100800 }
         decoder.dateDecodingStrategy = .secondsSince1970
         self.decoder = decoder
     }
-
+    
     // MARK: - NetworkServiceProtocol
-
-    public func fetch<T: Decodable>(_ type: T.Type, from url: URL) async throws -> T {
-        let (data, response) = try await session.data(from: url)
+    
+    public func request<T: Decodable>(_ type: T.Type, for request: URLRequest) async throws -> T {
+        var authorizedRequest = request
+        if let token = tokenProvider() {
+            authorizedRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        let (data, response) = try await session.data(for: authorizedRequest)
 
         guard let http = response as? HTTPURLResponse else {
             throw NetworkError.invalidResponse(statusCode: 0)
@@ -40,4 +45,3 @@ public final class URLSessionNetworkService: NetworkServiceProtocol {
         }
     }
 }
-

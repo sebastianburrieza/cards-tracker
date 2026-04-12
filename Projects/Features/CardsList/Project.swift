@@ -10,7 +10,8 @@ let project = CardsTrackerProject
             Dependency.navigation,
             Dependency.componentsUI,
             Dependency.resourcesUI,
-            Dependency.coreServices
+            Dependency.coreServices,
+            Dependency.coreModels
         ],
         interfaceDependencies: [
             Dependency.navigation

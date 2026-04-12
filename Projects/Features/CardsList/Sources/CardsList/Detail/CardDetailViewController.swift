@@ -3,6 +3,7 @@
 
 import UIKit
 import SwiftUI
+import CoreModels
 import CardsTransactionDetailInterface
 
 final class CardDetailViewController: UIHostingController<CardDetailView> {
@@ -46,8 +47,22 @@ extension CardDetailViewController: CardDetailNavigationDelegate {
     func navigateToTransactionDetail(id: String) {
         let route = CardsTransactionDetailRoute(transactionId: id)
         Task { @MainActor in
-            await coordinator?.navigateToRoute(route, navigationType: .present(.overFullScreen, false))
+            await coordinator?.router.navigate(
+                to: route,
+                fromCoordinator: coordinator,
+                navigationType: .present(.overFullScreen, false)
+            )
         }
+    }
+
+    func showError(_ error: ServerError) {
+        let alert = UIAlertController(
+            title: error.title ?? "Something went wrong",
+            message: error.message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 }
 
