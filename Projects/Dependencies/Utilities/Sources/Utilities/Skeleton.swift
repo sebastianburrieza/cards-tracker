@@ -74,7 +74,9 @@ struct ShimmeringView: View {
             )
             .offset(x: isAnimating ? 500 : -500)
             .onAppear {
-                withAnimation(Animation.timingCurve(0.33, 0.59, 0.81, 0.5, duration: duration).repeatForever(autoreverses: false)) {
+                withAnimation(
+                    Animation.timingCurve(0.33, 0.59, 0.81, 0.5, duration: duration)
+                        .repeatForever(autoreverses: false)) {
                     self.isAnimating = true
                 }
             }

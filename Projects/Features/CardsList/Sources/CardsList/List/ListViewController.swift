@@ -3,6 +3,7 @@
 
 import UIKit
 import SwiftUI
+import CoreModels
 
 final class ListViewController: UIHostingController<ListView> {
     
@@ -37,12 +38,18 @@ final class ListViewController: UIHostingController<ListView> {
 }
 
 extension ListViewController: ListNavigationDelegate {
-    
+
     func navigateToDetail(card: Card) {
         coordinator?.navigate(to: .detail(card: card), navigationType: .push(true))
     }
-    
-//    func endFlow() {
-//        coordinator?.endFlow?()
-//    }
+
+    func showError(_ error: ServerError) {
+        let alert = UIAlertController(
+            title: error.title ?? "Something went wrong",
+            message: error.message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
 }

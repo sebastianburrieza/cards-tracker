@@ -2,6 +2,7 @@
 //  Created by Sebastian Burrieza on 01/04/2026.
 
 import SwiftUI
+import ResourcesUI
 import Utilities
 import Extensions
 
@@ -23,5 +24,9 @@ final class TransactionItemViewModel: ObservableObject {
 
     var categoryIcon: String {
         transaction.category?.icon ?? "questionmark"
+    }
+    
+    var categoryColor: Color {
+        transaction.category?.color ?? Palette.grayMedium.swiftUI
     }
 }

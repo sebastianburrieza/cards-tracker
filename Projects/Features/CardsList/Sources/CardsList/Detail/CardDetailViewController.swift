@@ -3,6 +3,7 @@
 
 import UIKit
 import SwiftUI
+import CoreModels
 
 final class CardDetailViewController: UIHostingController<CardDetailView> {
     
@@ -37,13 +38,19 @@ final class CardDetailViewController: UIHostingController<CardDetailView> {
 }
 
 extension CardDetailViewController: CardDetailNavigationDelegate {
-    
+
     func navigateToPrevious() {
         coordinator?.navigateToPrevious(true)
     }
-    
-//    func endFlow() {
-//        coordinator?.endFlow?()
-//    }
+
+    func showError(_ error: ServerError) {
+        let alert = UIAlertController(
+            title: error.title ?? "Something went wrong",
+            message: error.message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
 }
 
