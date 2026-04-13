@@ -16,6 +16,7 @@ protocol TransactionDetailNavigationDelegate: AnyObject {
 // MARK: - ViewModel
 
 @Observable
+@MainActor
 final class TransactionDetailViewModel {
 
     // MARK: - Public state

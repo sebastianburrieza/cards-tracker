@@ -4,95 +4,74 @@
 import UIKit
 import SwiftUI
 
+/// Design-system font helpers that always return SF Pro Rounded.
+///
+/// Uses the system `.rounded` font design trait — no bundled font files required.
+/// This is the Apple-recommended approach for accessing SF Pro Rounded on iOS 17+.
 public final class Fonts {
 
-    // MARK: UIKit Fonts
+    // MARK: UIKit
 
     public static func heavy(size: CGFloat) -> UIFont {
-        return UIFont.createFont(name: .SFProHeavy, size: size)
+        UIFont.systemFont(ofSize: size, weight: .heavy).rounded
     }
 
     public static func bold(size: CGFloat) -> UIFont {
-        return UIFont.createFont(name: .SFProBold, size: size)
+        UIFont.systemFont(ofSize: size, weight: .bold).rounded
     }
 
     public static func medium(size: CGFloat) -> UIFont {
-        return UIFont.createFont(name: .SFProMedium, size: size)
+        UIFont.systemFont(ofSize: size, weight: .medium).rounded
     }
 
     public static func regular(size: CGFloat) -> UIFont {
-        return UIFont.createFont(name: .SFProRegular, size: size)
+        UIFont.systemFont(ofSize: size, weight: .regular).rounded
     }
 
     public static func thin(size: CGFloat) -> UIFont {
-        return UIFont.createFont(name: .SFProThin, size: size)
+        UIFont.systemFont(ofSize: size, weight: .thin).rounded
     }
 
-    // MARK: SwiftUI Fonts
+    // MARK: SwiftUI
 
     public static func heavy(size: CGFloat) -> Font {
-        return Font(Fonts.heavy(size: size))
+        Font(Fonts.heavy(size: size) as CTFont)
     }
 
     public static func bold(size: CGFloat) -> Font {
-        return Font(Fonts.bold(size: size))
+        Font(Fonts.bold(size: size) as CTFont)
     }
 
     public static func medium(size: CGFloat) -> Font {
-        return Font(Fonts.medium(size: size))
+        Font(Fonts.medium(size: size) as CTFont)
     }
 
     public static func regular(size: CGFloat) -> Font {
-        return Font(Fonts.regular(size: size))
+        Font(Fonts.regular(size: size) as CTFont)
     }
 
     public static func thin(size: CGFloat) -> Font {
-        return Font(Fonts.thin(size: size))
+        Font(Fonts.thin(size: size) as CTFont)
     }
 }
+
+// MARK: - UIFont + Rounded
+
+private extension UIFont {
+
+    /// Returns this font with the `.rounded` design trait applied.
+    /// Falls back to self if the descriptor transformation fails.
+    var rounded: UIFont {
+        guard let descriptor = fontDescriptor.withDesign(.rounded) else { return self }
+        return UIFont(descriptor: descriptor, size: pointSize)
+    }
+}
+
+// MARK: - Legacy support
 
 public enum FontType {
     case regular
     case medium
     case semibold
     case bold
-}
-
-public enum FontName: String, CaseIterable {
-    case SFProHeavy   = "SF-Pro-Rounded-Heavy.otf"
-    case SFProBold    = "SF-Pro-Rounded-Bold.otf"
-    case SFProMedium  = "SF-Pro-Rounded-Medium.otf"
-    case SFProRegular = "SF-Pro-Rounded-Regular.otf"
-    case SFProThin    = "SF-Pro-Rounded-Thin.otf"
-
-    public var noExtension: String {
-        var components = self.rawValue.components(separatedBy: ".")
-        guard components.count > 1 else { return self.rawValue }
-        components.removeLast(1)
-        return components.joined(separator: ".")
-    }
-
-    public var weight: UIFont.Weight {
-        switch self {
-        case .SFProHeavy:   return .heavy
-        case .SFProBold:    return .bold
-        case .SFProMedium:  return .medium
-        case .SFProRegular: return .regular
-        case .SFProThin:    return .thin
-        }
-    }
-}
-
-extension UIFont {
-
-    public class func createFont(name: FontName, size fontSize: CGFloat) -> UIFont {
-        var font: UIFont?
-
-        switch name {
-        case .SFProHeavy, .SFProBold, .SFProMedium, .SFProRegular, .SFProThin:
-            font = UIFont(name: name.noExtension, size: fontSize)
-        }
-
-        return font ?? UIFont.systemFont(ofSize: fontSize, weight: name.weight)
-    }
 }

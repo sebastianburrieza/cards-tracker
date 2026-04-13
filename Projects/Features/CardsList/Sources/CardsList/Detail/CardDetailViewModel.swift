@@ -17,15 +17,18 @@ protocol CardDetailNavigationDelegate: AnyObject {
     func showError(_ error: ServerError)
 }
 
-final class CardDetailViewModel: ObservableObject {
+@Observable
+final class CardDetailViewModel {
 
     let card: Card
 
-    @Published var transactions: [Transaction] = []
-    @Published var isLoading = false
+    var transactions: [Transaction] = []
+    var isLoading = false
 
+    @ObservationIgnored
     @Injected(\.cardsRepository) private var repository
 
+    @ObservationIgnored
     weak var delegate: CardDetailNavigationDelegate?
 
     init(card: Card) {
@@ -37,7 +40,6 @@ final class CardDetailViewModel: ObservableObject {
     /// Fetches all transactions for this card from the remote endpoint.
     func fetchTransactions() async {
         await MainActor.run { isLoading = true }
-        defer { isLoading = false }
 
         let result = await repository.fetchTransactions(for: card.id)
 
@@ -48,7 +50,9 @@ final class CardDetailViewModel: ObservableObject {
             case .failure(let error):
                 delegate?.showError(error)
             }
+            isLoading = false
         }
+        
     }
 
     // MARK: - Formatted values
