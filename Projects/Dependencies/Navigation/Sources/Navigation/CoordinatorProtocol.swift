@@ -19,7 +19,7 @@ public protocol CoordinatorProtocol: AnyObject {
     var childCoordinators: [any CoordinatorProtocol] { get set }
 
     /// The router used to perform the actual navigation actions.
-    var router: RouterProtocol { get }
+    var router: RouterServiceProtocol { get }
 
     /// Builds the root view controller for this coordinator's flow.
     func start() -> UIViewController
@@ -34,7 +34,7 @@ public protocol CoordinatorProtocol: AnyObject {
     func navigate(to step: Steps, navigationType: NavigationType)
     
     /// Navigates to a given Route using the specified navigation type.
-    func navigateToRoute(_ route: Route, navigationType: NavigationType)
+    func navigateToRoute(_ route: Route, navigationType: NavigationType) async
 
     /// Builds the view controller associated with a given step.
     func buildController(for step: Steps) -> UIViewController
@@ -67,7 +67,7 @@ extension CoordinatorProtocol {
         childCoordinators.removeAll()
     }
     
-    public func navigateToRoute(_ route: Route, navigationType: NavigationType) {
-        router.navigate(toRoute: route, fromView: navigationController, navigationType: navigationType)
+    public func navigateToRoute(_ route: Route, navigationType: NavigationType) async {
+        await router.navigate(to: route, fromCoordinator: self, navigationType: navigationType)
     }
 }

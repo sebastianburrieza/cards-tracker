@@ -147,6 +147,9 @@ struct CardDetailView: View {
             VStack(spacing: 0) {
                 ForEach(Array(viewModel.transactions.enumerated()), id: \.element.id) { index, transaction in
                     TransactionItemView(viewModel: .init(transaction: transaction))
+                        .onTapGesture {
+                            viewModel.delegate?.navigateToTransactionDetail(id: transaction.id)
+                        }
 
                     if index < viewModel.transactions.count - 1 {
                         Divider()

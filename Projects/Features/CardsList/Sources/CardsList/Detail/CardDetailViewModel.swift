@@ -11,6 +11,8 @@ import CoreModels
 protocol CardDetailNavigationDelegate: AnyObject {
     /// Called when the user taps the back button.
     func navigateToPrevious()
+    /// Called when the user taps a transaction row.
+    func navigateToTransactionDetail(id: String)
     /// Called when a data operation fails.
     func showError(_ error: ServerError)
 }

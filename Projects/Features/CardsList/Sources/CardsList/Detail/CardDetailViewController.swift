@@ -4,6 +4,7 @@
 import UIKit
 import SwiftUI
 import CoreModels
+import CardsTransactionDetailInterface
 
 final class CardDetailViewController: UIHostingController<CardDetailView> {
     
@@ -41,6 +42,17 @@ extension CardDetailViewController: CardDetailNavigationDelegate {
 
     func navigateToPrevious() {
         coordinator?.navigateToPrevious(true)
+    }
+
+    func navigateToTransactionDetail(id: String) {
+        let route = CardsTransactionDetailRoute(transactionId: id)
+        Task { @MainActor in
+            await coordinator?.router.navigate(
+                to: route,
+                fromCoordinator: coordinator,
+                navigationType: .present(.overFullScreen, false)
+            )
+        }
     }
 
     func showError(_ error: ServerError) {

@@ -4,6 +4,7 @@
 import Factory
 import Navigation
 import CardsList
+import CardsTransactionDetail
 
 /// App-level entry point for all route handler, deep link parser,
 /// and Factory dependency registrations.
@@ -20,9 +21,9 @@ final class AppRouter {
 
     /// Configures all shared services. Must be called before any navigation occurs.
     ///
-    /// - Parameter router: The root ``RouterProtocol`` instance created in ``SceneDelegate``.
-    static func setup(router: any RouterProtocol) {
-        registerAllDependencies(router: router)
+    /// - Parameter routerService: The root ``RouterServiceProtocol`` instance created in ``SceneDelegate``.
+    static func setup(routerService: RouterServiceProtocol) {
+        registerAllDependencies()
         registerAllRouteHandlers()
         registerAllDeepLinkParsers()
     }
@@ -31,6 +32,7 @@ final class AppRouter {
 
     private static func registerAllRouteHandlers() {
         Container.shared.routerService().register(routeHandler: CardsListRouteHandler())
+        Container.shared.routerService().register(routeHandler: CardsTransactionDetailRouteHandler())
     }
 
     private static func registerAllDeepLinkParsers() {
@@ -38,17 +40,15 @@ final class AppRouter {
         Container.shared.deepLinkHandler().register(
             parser: CardsListDeepLinkParser(routerService: routerService)
         )
+        Container.shared.deepLinkHandler().register(
+            parser: CardsTransactionDetailDeepLinkParser(routerService: routerService)
+        )
     }
 
     /// Registers singleton services and configures them with the app's root router.
     /// Add new Factory registrations here as the app grows.
-    private static func registerAllDependencies(router: any RouterProtocol) {
-        Container.shared.routerService().configure(
-            router: router,
-            failureHandler: { routeId in
-                assertionFailure("🛑 No handler registered for route: '\(routeId)'")
-            }
-        )
+    private static func registerAllDependencies() {
+
     }
 }
 
