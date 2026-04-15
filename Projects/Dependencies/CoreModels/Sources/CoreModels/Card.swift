@@ -7,25 +7,46 @@ public struct Card: Identifiable, Hashable, Codable {
 
     public let id: String
 
-    let type: CardType
-    let color: ColorCode
+    public let type: CardType
+    public let color: ColorCode
 
     /// Optional hex color override (e.g. `"#A34FD2"`). Overrides `color` when present.
-    let hexa: String?
+    public let hexa: String?
 
-    let holderName: String
+    public let holderName: String
 
-    let limit: Int
-    let available: Int
+    public let limit: Int
+    public let available: Int
     
-    let closingDate: Date
-    let dueDate: Date
+    public let closingDate: Date
+    public let dueDate: Date
+}
+
+public enum CardType: String, Codable {
+    case debitVirtual
+    case debitPlastic
+    case creditVirtual
+    case creditPlastic
+    /// UI-only state — never sent by the server.
+    case skeleton
+    /// UI-only state — never sent by the server.
+    case failure
+}
+
+public enum ColorCode: String, Codable {
+    case WHITE
+    case PINK
+    case VIOLET
+    case GREEN
+    case PURPLE
+    case ORANGE
     
+    case SKELETON
 }
 
 // MARK: - Mock
 
-extension Card {
+public extension Card {
     
     static func mock(id: String = "550e8400-e29b-41d4-a716-446655440000",
                      type: CardType = .creditPlastic,

@@ -15,13 +15,15 @@ public struct CardsListDeepLinkParser: DeepLinkParserProtocol {
 
     private enum NotificationType: String {
         /// Sent when the user makes a purchase on a card.
-        case purchase
+        case list
+        case cardDetail
     }
 
     // MARK: - URL hosts owned by this feature
 
     private enum URLHost: String {
         case cardsList = "cards-list"
+        case cardDetail = "card-detail"
     }
 
     private let routerService: any RouterServiceProtocol
@@ -35,25 +37,34 @@ public struct CardsListDeepLinkParser: DeepLinkParserProtocol {
     public func action(fromNotification userInfo: [AnyHashable: Any]) -> (any DeepLinkAction)? {
         guard
             let type = userInfo["type"] as? String,
-            NotificationType(rawValue: type) != nil
+            let notificationType = NotificationType(rawValue: type)
         else { return nil }
 
-        return CardsListDeepLinkAction(
-            queryParameters: userInfo as? [String: Any] ?? [:],
-            routerService: routerService
-        )
+        let params = userInfo as? [String: Any] ?? [:]
+
+        switch notificationType {
+        case .list:
+            return CardsListDeepLinkAction(queryParameters: params, routerService: routerService)
+        case .cardDetail:
+            return CardDetailDeepLinkAction(queryParameters: params, routerService: routerService)
+        }
     }
 
     public func action(fromURL url: URL) -> (any DeepLinkAction)? {
         guard
             let host = url.host,
-            URLHost(rawValue: host) != nil
+            let urlHost = URLHost(rawValue: host)
         else { return nil }
 
         let params = URLComponents(url: url, resolvingAgainstBaseURL: false)?
             .queryItems?
             .reduce(into: [String: Any]()) { $0[$1.name] = $1.value ?? "" } ?? [:]
 
-        return CardsListDeepLinkAction(queryParameters: params, routerService: routerService)
+        switch urlHost {
+        case .cardsList:
+            return CardsListDeepLinkAction(queryParameters: params, routerService: routerService)
+        case .cardDetail:
+            return CardDetailDeepLinkAction(queryParameters: params, routerService: routerService)
+        }
     }
 }

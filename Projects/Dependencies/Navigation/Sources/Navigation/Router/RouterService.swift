@@ -9,6 +9,15 @@ public protocol RouterServiceProtocol {
     /// Registers a route handler for one or more routes.
     func register(routeHandler: any RouteHandler)
 
+    /// Stores the app's root UINavigationController so deeplinks can navigate
+    /// without needing a coordinator reference.
+    /// Must be called once from SceneDelegate before any navigation occurs.
+    func setRootNavigationController(_ navController: UINavigationController)
+
+    /// The app's root navigation controller.
+    /// Used by route handlers that need to create coordinators for deeplink-triggered navigation.
+    var rootNavigationController: UINavigationController? { get }
+
     /// Builds the view controller associated with the given route.
     @MainActor
     func buildController(for route: any Route) async -> UIViewController?
@@ -22,7 +31,7 @@ extension RouterServiceProtocol {
     public func navigate(to route: any Route,
                          fromCoordinator: (any CoordinatorProtocol)? = nil,
                          navigationType: NavigationType) async {
-        await navigate(to: route, fromCoordinator: fromCoordinator, navigationType: .push(true))
+        await navigate(to: route, fromCoordinator: fromCoordinator, navigationType: navigationType)
     }
 }
 
@@ -45,10 +54,19 @@ public final class RouterService: RouterServiceProtocol {
     private var handlers: [String: any RouteHandler] = [:]
     private var failureHandler: ((String) -> Void)?
 
+    /// The app's single root navigation controller.
+    /// Used as fallback when `navigate()` is called without a coordinator (e.g. from deeplinks).
+    public private(set) weak var rootNavigationController: UINavigationController?
+
     /// Configures the instance with a router and optional failure handler.
     /// Must be called from `AppRouter.setup()` before any navigation occurs.
     public init(failureHandler: ((String) -> Void)? = nil) {
         self.failureHandler = failureHandler ?? { _ in }
+    }
+
+    /// Stores the root navigation controller so deeplinks can push onto the existing stack.
+    public func setRootNavigationController(_ navController: UINavigationController) {
+        rootNavigationController = navController
     }
 
     // MARK: - Registration
@@ -85,7 +103,12 @@ public final class RouterService: RouterServiceProtocol {
                          navigationType: NavigationType = .push(true)) async {
         guard let controller = await buildController(for: route) else { return }
 
-        let navigationController = fromCoordinator?.navigationController ?? UINavigationController()
+        // Use the coordinator's nav controller if available.
+        // Fall back to the root nav controller for deeplink-triggered navigation
+        // where no coordinator is in scope.
+        guard let navigationController = fromCoordinator?.navigationController ?? rootNavigationController else {
+            return
+        }
         performNavigation(to: controller, fromNavigation: navigationController, style: navigationType)
     }
     

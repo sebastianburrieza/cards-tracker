@@ -2,6 +2,7 @@
 //  Created by Sebastian Burrieza on 01/04/2026.
 
 import SwiftUI
+import CoreModels
 import ResourcesUI
 import Utilities
 

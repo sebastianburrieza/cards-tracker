@@ -25,7 +25,7 @@ enum CardsListStrings {
             static func disponible(_ amount: String) -> String {
                 String(format: NSLocalizedString("card.detail.disponible", bundle: .main, comment: ""), amount)
             }
-            static let pausar   = NSLocalizedString("card.detail.pausar",   bundle: .main, comment: "")
+            static let pausar = NSLocalizedString("card.detail.pausar",   bundle: .main, comment: "")
             static let reportar = NSLocalizedString("card.detail.reportar", bundle: .main, comment: "")
         }
     }

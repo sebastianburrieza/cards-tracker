@@ -26,16 +26,6 @@ final class CardDetailViewController: UIHostingController<CardDetailView> {
         view.backgroundColor = .clear
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-    }
-    
 }
 
 extension CardDetailViewController: CardDetailNavigationDelegate {
@@ -45,7 +35,7 @@ extension CardDetailViewController: CardDetailNavigationDelegate {
     }
 
     func navigateToTransactionDetail(id: String) {
-        let route = CardsTransactionDetailRoute(transactionId: id)
+        let route = TransactionDetailRoute(transactionId: id)
         Task { @MainActor in
             await coordinator?.router.navigate(
                 to: route,

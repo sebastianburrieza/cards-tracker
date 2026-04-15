@@ -2,6 +2,7 @@
 //  Created by Sebastian Burrieza on 01/04/2026.
 
 import SwiftUI
+import CoreModels
 import ResourcesUI
 import Utilities
 
@@ -41,7 +42,7 @@ struct TransactionItemView: View {
 
 struct TransactionItemView_Previews: PreviewProvider {
     static var previews: some View {
-        TransactionItemView(viewModel: .init(transaction: Transaction.mock()))
+        TransactionItemView(viewModel: .init(transaction: CoreModels.Transaction.mock()))
             .previewLayout(.sizeThatFits)
     }
 }

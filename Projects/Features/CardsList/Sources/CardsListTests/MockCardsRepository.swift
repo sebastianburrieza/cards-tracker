@@ -11,6 +11,7 @@ final class MockCardsRepository: CardsRepositoryProtocol {
     // MARK: - Call Tracking
 
     var fetchCardsCallCount = 0
+    var fetchCardCallCount = 0
     var fetchTransactionsCallCount = 0
     var createCardCallCount = 0
     var updateCardCallCount = 0
@@ -18,6 +19,7 @@ final class MockCardsRepository: CardsRepositoryProtocol {
 
     // MARK: - Captured Arguments
 
+    var capturedFetchCardId: String?
     var capturedCardIds: [String] = []
     var capturedCreatedCard: Card?
     var capturedUpdatedCard: Card?
@@ -26,6 +28,7 @@ final class MockCardsRepository: CardsRepositoryProtocol {
     // MARK: - Stubbed Results
 
     var fetchCardsResult: Result<[Card], ServerError> = .success([])
+    var fetchCardResult: Result<Card, ServerError> = .success(.mock())
     var fetchTransactionsResult: Result<[Transaction], ServerError> = .success([])
     var createCardResult: Result<Card, ServerError> = .success(.mock())
     var updateCardResult: Result<Card, ServerError> = .success(.mock())
@@ -36,6 +39,12 @@ final class MockCardsRepository: CardsRepositoryProtocol {
     func fetchCards() async -> Result<[Card], ServerError> {
         fetchCardsCallCount += 1
         return fetchCardsResult
+    }
+
+    func fetchCard(id: String) async -> Result<Card, ServerError> {
+        fetchCardCallCount += 1
+        capturedFetchCardId = id
+        return fetchCardResult
     }
 
     func fetchTransactions(for cardId: String) async -> Result<[Transaction], ServerError> {
@@ -66,15 +75,18 @@ final class MockCardsRepository: CardsRepositoryProtocol {
 
     func reset() {
         fetchCardsCallCount = 0
+        fetchCardCallCount = 0
         fetchTransactionsCallCount = 0
         createCardCallCount = 0
         updateCardCallCount = 0
         deleteCardCallCount = 0
+        capturedFetchCardId = nil
         capturedCardIds = []
         capturedCreatedCard = nil
         capturedUpdatedCard = nil
         capturedDeletedId = nil
         fetchCardsResult = .success([])
+        fetchCardResult = .success(.mock())
         fetchTransactionsResult = .success([])
         createCardResult = .success(.mock())
         updateCardResult = .success(.mock())

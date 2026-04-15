@@ -4,10 +4,11 @@
 import SwiftUI
 import ResourcesUI
 import Utilities
+import CoreModels
 
 struct CardListItemView: View {
 
-    @ObservedObject var viewModel: CardListItemViewModel
+    @State var viewModel: CardListItemViewModel
 
     var body: some View {
         HStack(spacing: 8) {

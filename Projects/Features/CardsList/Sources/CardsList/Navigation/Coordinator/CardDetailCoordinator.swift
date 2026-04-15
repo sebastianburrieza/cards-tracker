@@ -3,6 +3,7 @@
 
 import UIKit
 import SwiftUI
+import CoreModels
 import Navigation
 import CardsListInterface
 import CardsTransactionDetailInterface

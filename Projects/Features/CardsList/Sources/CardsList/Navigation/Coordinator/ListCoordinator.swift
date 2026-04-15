@@ -4,6 +4,7 @@
 import UIKit
 import SwiftUI
 import Navigation
+import CoreModels
 
 public final class ListCoordinator: CoordinatorProtocol {
 

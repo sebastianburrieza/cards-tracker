@@ -34,6 +34,10 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate {
         // Configure routing services before any navigation occurs.
         AppRouter.setup(routerService: appCoordinator.router)
 
+        // Give the router a reference to the root nav controller so deeplinks
+        // can push onto the existing stack without needing a coordinator.
+        appCoordinator.router.setRootNavigationController(navController)
+
         // Queue cold-start triggers so they execute once the window is ready.
         if let response = connectionOptions.notificationResponse {
             deepLinkHandler.handle(notification: response.notification.request.content.userInfo)

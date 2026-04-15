@@ -44,6 +44,19 @@ final class CardsRepository: CardsRepositoryProtocol {
         return await perform { try await networkService.request([Card].self, for: URLRequest(url: url)) }
     }
 
+    func fetchCard(id: String) async -> Result<Card, ServerError> {
+        guard let url = Endpoint.cards else {
+            return .failure(ServerError(.invalidURL))
+        }
+        return await perform {
+            let all = try await networkService.request([Card].self, for: URLRequest(url: url))
+            guard let card = all.first(where: { $0.id == id }) else {
+                throw ServerError(.cardNotFound)
+            }
+            return card
+        }
+    }
+
     func fetchTransactions(for cardId: String) async -> Result<[Transaction], ServerError> {
         guard let url = Endpoint.transactions else {
             return .failure(ServerError(.invalidURL))

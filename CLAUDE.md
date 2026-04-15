@@ -109,6 +109,14 @@ CardsTracker/
 
 ---
 
+## Working Style
+
+- **Always ask for "ok" before implementing.** When a solution is ready, explain it first and use the AskUserQuestion tool with two buttons ("Yes, go ahead" / "No, let's discuss") to ask for approval. Never write code without explicit approval. This applies everywhere — bug fixes, new features, refactors, and even small edits.
+- **Always explain every change**: what file, what lines, and why — as if it's the first time he sees it.
+- Use analogías with iOS/Swift when explaining new concepts.
+
+---
+
 ## Git & GitHub
 
 Remote: `https://github.com/sebastianburrieza/cards-tracker.git`

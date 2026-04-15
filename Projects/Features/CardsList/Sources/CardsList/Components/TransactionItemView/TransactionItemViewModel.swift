@@ -5,12 +5,13 @@ import SwiftUI
 import ResourcesUI
 import Utilities
 import Extensions
+import CoreModels
 
 final class TransactionItemViewModel: ObservableObject {
 
-    let transaction: Transaction
+    let transaction: CoreModels.Transaction
 
-    init(transaction: Transaction) {
+    init(transaction: CoreModels.Transaction) {
         self.transaction = transaction
     }
 

@@ -22,7 +22,7 @@ final class CardDetailViewModel {
 
     let card: Card
 
-    var transactions: [Transaction] = []
+    var transactions: [CoreModels.Transaction] = []
     var isLoading = false
 
     @ObservationIgnored

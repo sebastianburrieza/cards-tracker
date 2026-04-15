@@ -1,4 +1,4 @@
-//  CardsTransactionDetailRouteHandler.swift
+//  TransactionDetailRouteHandler.swift
 //  Created by Sebastian Burrieza on 12/04/2026.
 
 import UIKit
@@ -7,17 +7,17 @@ import CardsTransactionDetailInterface
 
 /// Handles route resolution for the CardsTransactionDetail feature.
 /// Registered at app startup via ``AppRouter``.
-public final class CardsTransactionDetailRouteHandler: RouteHandler {
+public final class TransactionDetailRouteHandler: RouteHandler {
 
     public init() { }
 
     public var routes: [any Route.Type] {
-        [CardsTransactionDetailRoute.self]
+        [TransactionDetailRoute.self]
     }
 
     @MainActor
     public func build(fromRoute route: (any Route)?) async -> UIViewController? {
-        guard let detailRoute = route as? CardsTransactionDetailRoute else { return nil }
+        guard let detailRoute = route as? TransactionDetailRoute else { return nil }
 
         let viewModel = TransactionDetailViewModel(transactionId: detailRoute.transactionId)
         return TransactionDetailViewController(viewModel: viewModel)
