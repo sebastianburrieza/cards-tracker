@@ -26,6 +26,10 @@ struct ListView: View {
                 .background(Material.ultraThin)
         }
         .task { await viewModel.fetchCards() }
+        .toastErrorView(title: viewModel.errorTitle ?? "",
+                        message: viewModel.errorMessage,
+                        duration: 3,
+                        isPresented: $viewModel.isError)
     }
 
     // MARK: Background

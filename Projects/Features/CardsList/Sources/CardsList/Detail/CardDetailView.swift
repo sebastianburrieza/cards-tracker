@@ -36,6 +36,10 @@ struct CardDetailView: View {
             .background(Material.thin)
         }
         .task { await viewModel.fetchTransactions() }
+        .toastErrorView(title: viewModel.errorTitle ?? "",
+                        message: viewModel.errorMessage,
+                        duration: 3,
+                        isPresented: $viewModel.isError)
     }
 
     // MARK: Background
@@ -164,38 +168,3 @@ struct CardDetailView: View {
         }
     }
 }
-
-// MARK: - Preview
-
-#if DEBUG
-struct CardDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        _ = Container.shared.cardsRepository.register { MockCardsRepositoryForDetail() }
-        return CardDetailView(viewModel: .init(card: Card.mocks[0]))
-    }
-}
-
-private final class MockCardsRepositoryForDetail: CardsRepositoryProtocol {
-    func createCard(_ card: Card) async -> Result<Card, ServerError> {
-        .failure(.unexpected)
-    }
-    
-    func updateCard(_ card: Card) async -> Result<Card, ServerError> {
-        .failure(.unexpected)
-    }
-    
-    func deleteCard(id: String) async -> Result<Void, ServerError> {
-        .failure(.unexpected)
-    }
-    
-    func fetchCards() async -> Result<[Card], ServerError> { .success(Card.mocks) }
-    
-    func fetchCard(id: String) async -> Result<CoreModels.Card, CoreModels.ServerError> {
-        .failure(.unexpected)
-    }
-    
-    func fetchTransactions(for cardId: String) async -> Result<[CoreModels.Transaction], ServerError> {
-        .success(CoreModels.Transaction.mocks.filter { $0.cardId == cardId })
-    }
-}
-#endif
