@@ -98,6 +98,13 @@ CardsTracker/
 
 ---
 
+## Swift Conventions
+
+- **Never use force unwrap (`!`)** — always use `guard`, `if let`, or `??` to handle optionals safely
+
+---
+
+
 ## SwiftLint Rules (key thresholds)
 
 - Line length: 130 (warning), 200 (error)
