@@ -5,7 +5,7 @@ import Factory
 import CoreModels
 @testable import CardsList
 
-final class CardsListTests: XCTestCase {
+final class CardsListViewModelTests: XCTestCase {
 
     var viewModel: ListViewModel!
     var mockRepository: MockCardsRepository!
