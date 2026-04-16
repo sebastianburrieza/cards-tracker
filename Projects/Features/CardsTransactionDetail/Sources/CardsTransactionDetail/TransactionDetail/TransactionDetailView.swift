@@ -16,30 +16,24 @@ struct TransactionDetailView: View {
             GeometryReader { geometry in
                 let height = geometry.size.height
 
-                // MARK: - Dimmed background
+                // MARK: - Shadow background
 
                 Color.black
                     .opacity(isShowing ? 0.5 : 0)
                     .ignoresSafeArea()
-                    .onTapGesture { dismissSheet() }
+                    .onTapGesture { dismissView() }
 
                 // MARK: - Bottom sheet
 
                 VStack {
                     Spacer()
 
-                    Group {
-                        if viewModel.isLoading {
-                            skeletonContent
-                        } else {
-                            sheetContent
-                        }
-                    }
-                    .background(Color.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 40, style: .continuous))
-                    .shadow(color: .black.opacity(0.1), radius: 6, x: 0, y: 4)
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 10)
+                    dataContent
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 40, style: .continuous))
+                        .shadow(color: .black.opacity(0.1), radius: 6, x: 0, y: 4)
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 10)
                 }
                 .offset(y: isShowing ? 0 : height)
             }
@@ -52,10 +46,10 @@ struct TransactionDetailView: View {
         }
     }
 
-    // MARK: - Sheet content
+    // MARK: - Data content
 
     @ViewBuilder
-    private var sheetContent: some View {
+    private var dataContent: some View {
         VStack(spacing: 0) {
             // Category icon
             if let icon = viewModel.categoryIcon {
@@ -63,6 +57,7 @@ struct TransactionDetailView: View {
                     .font(.system(size: 32))
                     .foregroundStyle(viewModel.categoryColor)
                     .padding(.top, 28)
+                    .isSkeletonView(viewModel.isLoading)
             }
 
             // Merchant name
@@ -70,24 +65,28 @@ struct TransactionDetailView: View {
                 .font(Fonts.bold(size: 24) as Font)
                 .foregroundStyle(Color(hex: 0x19191B))
                 .padding(.top, 12)
+                .isSkeletonView(viewModel.isLoading)
 
             // Amount
             Text(viewModel.formattedAmount)
                 .font(Fonts.bold(size: 32) as Font)
                 .foregroundStyle(Palette.staticBlack.swiftUI)
                 .padding(.top, 8)
+                .isSkeletonView(viewModel.isLoading)
 
             // Date
             Text(viewModel.formattedDate)
                 .font(Fonts.medium(size: 16) as Font)
                 .foregroundStyle(Palette.grayMedium.swiftUI)
                 .padding(.top, 4)
+                .isSkeletonView(viewModel.isLoading)
 
             // Category pill
             if let categoryName = viewModel.categoryName {
                 categoryPill(name: categoryName)
                     .padding(.top, 20)
                     .padding(.horizontal, 27)
+                    .isSkeletonView(viewModel.isLoading)
             }
 
             // Share button
@@ -96,14 +95,16 @@ struct TransactionDetailView: View {
             }
             .padding(.top, 12)
             .padding(.horizontal, 27)
+            .isSkeletonView(viewModel.isLoading)
 
             // Close button
             actionButton(title: "Cerrar", icon: nil) {
-                dismissSheet()
+                dismissView()
             }
             .padding(.top, 8)
             .padding(.horizontal, 27)
             .padding(.bottom, 28)
+            .isSkeletonView(viewModel.isLoading)
         }
     }
 
@@ -211,12 +212,12 @@ struct TransactionDetailView: View {
 
     // MARK: - Dismiss
 
-    private func dismissSheet() {
+    private func dismissView() {
         withAnimation(.timingCurve(0.45, 0.35, 0.25, 1.05, duration: 0.5)) {
             isShowing = false
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            viewModel.close()
+            viewModel.dismissView()
         }
     }
 }

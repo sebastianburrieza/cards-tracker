@@ -21,11 +21,11 @@ final class TransactionDetailViewModel {
 
     // MARK: - Public state
 
-    var merchantName: String = ""
-    var formattedAmount: String = ""
-    var formattedDate: String = ""
-    var categoryName: String?
-    var categoryIcon: String?
+    var merchantName: String = "Placeholder"
+    var formattedAmount: String = "$ 999.99"
+    var formattedDate: String = "1 de enero de 2026"
+    var categoryName: String? = "Ninguna"
+    var categoryIcon: String? = "questionmark"
     var categoryColor: Color = .red
 
     var isLoading = true
@@ -66,7 +66,7 @@ final class TransactionDetailViewModel {
 
     // MARK: - Actions
 
-    func close() {
+    func dismissView() {
         delegate?.dismiss()
     }
 

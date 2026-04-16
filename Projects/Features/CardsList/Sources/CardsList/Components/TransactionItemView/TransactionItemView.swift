@@ -8,7 +8,9 @@ import Utilities
 
 struct TransactionItemView: View {
 
-    @ObservedObject var viewModel: TransactionItemViewModel
+    @State var viewModel: TransactionItemViewModel
+    
+    var onTapped: ((CoreModels.Transaction) -> Void)?
 
     var body: some View {
         HStack(spacing: 12) {
@@ -16,25 +18,28 @@ struct TransactionItemView: View {
                 .font(.system(size: 24, weight: .medium))
                 .foregroundColor(viewModel.categoryColor)
                 .frame(width: 32)
-
+            
             VStack(alignment: .leading, spacing: 2) {
                 Text(viewModel.transaction.merchantName)
                     .font(Fonts.medium(size: 16))
                     .foregroundColor(Palette.grayUltraDark.swiftUI)
-
+                
                 Text(viewModel.formattedDate)
                     .font(Fonts.regular(size: 12))
                     .foregroundColor(Palette.grayMedium.swiftUI)
             }
-
+            
             Spacer()
-
+            
             Text(viewModel.formattedAmount)
                 .font(Fonts.medium(size: 15))
                 .foregroundColor(Palette.grayUltraDark.swiftUI)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
+        .onTapGesture {
+            onTapped?(viewModel.transaction)
+        }
     }
 }
 

@@ -9,6 +9,9 @@ public enum Palette: String, CaseIterable, Codable {
 
     // Primary
     case primary
+    
+    // Backgrounds
+    case backgroundLight
 
     // Neutrals
     case grayUltraLight
