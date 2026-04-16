@@ -20,6 +20,11 @@ protocol CardsRepositoryProtocol {
     /// Fetches all cards for the current user.
     func fetchCards() async -> Result<[Card], ServerError>
 
+    /// Fetches a single card by its identifier.
+    ///
+    /// - Parameter id: The `id` of the card (UUID string).
+    func fetchCard(id: String) async -> Result<Card, ServerError>
+
     /// Fetches all transactions that belong to the given card.
     ///
     /// Retrieves the full transactions collection and filters by `cardId` client-side.

@@ -5,35 +5,35 @@ import Foundation
 import SwiftUI
 import ResourcesUI
 
-struct Transaction: Identifiable, Hashable, Codable {
-    let id: String
-    let merchantName: String
-    let date: Date
-    let amount: Int
-    let currency: Currency
-    let installment: Int?
-    let totalInstallments: Int?
-    let totalInstallmentsAmount: Int?
+public struct Transaction: Identifiable, Hashable, Codable {
+    public let id: String
+    public let merchantName: String
+    public let date: Date
+    public let amount: Int
+    public let currency: Currency
+    public let installment: Int?
+    public let totalInstallments: Int?
+    public let totalInstallmentsAmount: Int?
     
     /// The identifier of the card uses for the transaction
-    let cardId: String
+    public let cardId: String
 
     /// Optional store metadata. Not always present in the API response.
-    let store: Store?
+    public let store: Store?
 
-    let category: TransactionCategory?
+    public let category: TransactionCategory?
     
-    init(id: String,
-         merchantName: String,
-         date: Date,
-         amount: Int,
-         currency: String,
-         installment: Int? = nil,
-         totalInstallments: Int? = nil,
-         totalInstallmentsAmount: Int? = nil,
-         cardId: String,
-         store: Store? = nil,
-         category: TransactionCategory? = nil) {
+    public init(id: String,
+                merchantName: String,
+                date: Date,
+                amount: Int,
+                currency: String,
+                installment: Int? = nil,
+                totalInstallments: Int? = nil,
+                totalInstallmentsAmount: Int? = nil,
+                cardId: String,
+                store: Store? = nil,
+                category: TransactionCategory? = nil) {
         self.id = id
         self.merchantName = merchantName
         self.date = date
@@ -50,14 +50,14 @@ struct Transaction: Identifiable, Hashable, Codable {
 
 // MARK: - TransactionCategory
 
-enum TransactionCategory: String, Hashable, Codable {
+public enum TransactionCategory: String, Hashable, Codable {
     case restaurant
     case delivery
     case streaming
     case shopping
     case other
 
-    var icon: String {
+    public var icon: String {
         switch self {
         case .restaurant: return "fork.knife"
         case .delivery:   return "scooter"
@@ -67,7 +67,7 @@ enum TransactionCategory: String, Hashable, Codable {
         }
     }
     
-    var color: Color {
+    public var color: Color {
         switch self {
         case .restaurant: return Palette.blue.swiftUI
         case .delivery:   return Palette.red.swiftUI
@@ -80,8 +80,8 @@ enum TransactionCategory: String, Hashable, Codable {
 
 // MARK: - Store
 
-struct Store: Hashable, Codable {
-    let name: String
+public struct Store: Hashable, Codable {
+    public let name: String
     let logo: String?
     let latitude: Double?
     let longitude: Double?
@@ -89,7 +89,7 @@ struct Store: Hashable, Codable {
 
 // MARK: - Mock
 
-extension Transaction {
+public extension Transaction {
     
     static func mock(id: String = "660e8400-e29b-41d4-a716-446655440011",
                      merchantName: String = "Pedidos Ya",

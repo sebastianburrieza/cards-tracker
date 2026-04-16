@@ -190,8 +190,12 @@ private final class MockCardsRepositoryForDetail: CardsRepositoryProtocol {
     
     func fetchCards() async -> Result<[Card], ServerError> { .success(Card.mocks) }
     
-    func fetchTransactions(for cardId: String) async -> Result<[Transaction], ServerError> {
-        .success(Transaction.mocks.filter { $0.cardId == cardId })
+    func fetchCard(id: String) async -> Result<CoreModels.Card, CoreModels.ServerError> {
+        .failure(.unexpected)
+    }
+    
+    func fetchTransactions(for cardId: String) async -> Result<[CoreModels.Transaction], ServerError> {
+        .success(CoreModels.Transaction.mocks.filter { $0.cardId == cardId })
     }
 }
 #endif

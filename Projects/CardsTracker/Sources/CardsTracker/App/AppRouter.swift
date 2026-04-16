@@ -31,8 +31,9 @@ final class AppRouter {
     // MARK: - Private
 
     private static func registerAllRouteHandlers() {
-        Container.shared.routerService().register(routeHandler: CardsListRouteHandler())
-        Container.shared.routerService().register(routeHandler: CardsTransactionDetailRouteHandler())
+        let routerService = Container.shared.routerService()
+        routerService.register(routeHandler: CardsListRouteHandler(routerService: routerService))
+        routerService.register(routeHandler: TransactionDetailRouteHandler())
     }
 
     private static func registerAllDeepLinkParsers() {
@@ -41,7 +42,7 @@ final class AppRouter {
             parser: CardsListDeepLinkParser(routerService: routerService)
         )
         Container.shared.deepLinkHandler().register(
-            parser: CardsTransactionDetailDeepLinkParser(routerService: routerService)
+            parser: TransactionDetailDeepLinkParser(routerService: routerService)
         )
     }
 

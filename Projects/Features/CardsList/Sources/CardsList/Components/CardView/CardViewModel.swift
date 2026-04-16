@@ -4,17 +4,7 @@
 import SwiftUI
 import ResourcesUI
 import Utilities
-
-enum CardType: String, Codable {
-    case debitVirtual
-    case debitPlastic
-    case creditVirtual
-    case creditPlastic
-    /// UI-only state — never sent by the server.
-    case skeleton
-    /// UI-only state — never sent by the server.
-    case failure
-}
+import CoreModels
 
 final class CardViewModel: ObservableObject {
     
@@ -105,15 +95,4 @@ final class CardViewModel: ObservableObject {
         self.color = color
     }
     
-}
-
-enum ColorCode: String, Codable {
-    case WHITE
-    case PINK
-    case VIOLET
-    case GREEN
-    case PURPLE
-    case ORANGE
-    
-    case SKELETON
 }

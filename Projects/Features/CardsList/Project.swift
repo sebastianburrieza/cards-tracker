@@ -14,7 +14,8 @@ let project = CardsTrackerProject
             Dependency.coreModels
         ],
         interfaceDependencies: [
-            Dependency.navigation
+            Dependency.navigation,
+            Dependency.coreModels
         ],
         targetDependencies: [
             .external(name: "Factory"),

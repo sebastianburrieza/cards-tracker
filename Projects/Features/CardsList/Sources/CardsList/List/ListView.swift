@@ -86,6 +86,7 @@ struct ListView_Previews: PreviewProvider {
 }
 
 private final class MockCardsRepository: CardsRepositoryProtocol {
+    
     func createCard(_ card: Card) async -> Result<Card, ServerError> {
         .failure(.unexpected)
     }
@@ -100,31 +101,36 @@ private final class MockCardsRepository: CardsRepositoryProtocol {
     
     func fetchCards() async -> Result<[Card], ServerError> { .success(Card.mocks) }
     
-    func fetchTransactions(for cardId: String) async -> Result<[Transaction], ServerError> {
-        .success(Transaction.mocks.filter { $0.cardId == cardId })
+    func fetchCard(id: String) async -> Result<CoreModels.Card, CoreModels.ServerError> {
+        .success(Card.mocks.first!)
+    }
+    
+    func fetchTransactions(for cardId: String) async -> Result<[CoreModels.Transaction], ServerError> {
+        .success(CoreModels.Transaction.mocks.filter { $0.cardId == cardId })
     }
 }
 
 extension Card {
+    
     static let mocks: [Card] = [
-        Card.mock(
-            id: "550e8400-e29b-41d4-a716-446655440000",
-            type: .creditPlastic,
-            color: .GREEN,
-            holderName: "Sebastian A Burrieza",
-            limit: 220_000_000,
-            available: 33_250_000),
+        Card.mock(id: "550e8400-e29b-41d4-a716-446655440000",
+                  type: .creditPlastic,
+                  color: .GREEN,
+                  holderName: "Sebastian A Burrieza",
+                  limit: 220_000_000,
+                  available: 33_250_000),
         Card.mock(id: "550e8400-e29b-41d4-a716-446655440001",
-            type: .creditPlastic,
-            color: .PURPLE,
-            holderName: "Sebastian A Burrieza",
-            limit: 200_000_000,
-            available: 183_250_000)
+                  type: .creditPlastic,
+                  color: .PURPLE,
+                  holderName: "Sebastian A Burrieza",
+                  limit: 200_000_000,
+                  available: 183_250_000)
     ]
 }
 
-extension Transaction {
-    static let mocks: [Transaction] = [
+public extension CoreModels.Transaction {
+    
+    static let mocks: [CoreModels.Transaction] = [
         Transaction.mock(id: "660e8400-e29b-41d4-a716-446655440010",
                          merchantName: "Confiteria Paris",
                          amount: 1199000,

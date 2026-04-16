@@ -2,11 +2,13 @@
 //  Created by Sebastian Burrieza on 01/04/2026.
 
 import SwiftUI
+import CoreModels
 import ResourcesUI
 import Utilities
 import Extensions
 
-final class CardListItemViewModel: ObservableObject {
+@Observable
+final class CardListItemViewModel {
 
     let card: Card
 

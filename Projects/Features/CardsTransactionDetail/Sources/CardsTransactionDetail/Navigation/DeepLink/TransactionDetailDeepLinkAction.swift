@@ -1,4 +1,4 @@
-//  CardsTransactionDetailDeepLinkAction.swift
+//  TransactionDetailDeepLinkAction.swift
 //  Created by Sebastian Burrieza on 12/04/2026.
 
 import Navigation
@@ -10,7 +10,7 @@ import CardsTransactionDetailInterface
 ///
 /// **Supported query parameters:**
 /// - `transactionId` *(required)*: the transaction to display.
-final class CardsTransactionDetailDeepLinkAction: DeepLinkAction {
+final class TransactionDetailDeepLinkAction: DeepLinkAction {
 
     var queryParameters: [String: Any]
     private let routerService: any RouterServiceProtocol
@@ -27,8 +27,8 @@ final class CardsTransactionDetailDeepLinkAction: DeepLinkAction {
             return .success(queryParameters)
         }
         await routerService.navigate(
-            to: CardsTransactionDetailRoute(transactionId: transactionId),
-            navigationType: .push(true)
+            to: TransactionDetailRoute(transactionId: transactionId),
+            navigationType: .present(.overFullScreen, false)
         )
         return .success(queryParameters)
     }

@@ -1,4 +1,4 @@
-//  CardsTransactionDetailDeepLinkParser.swift
+//  TransactionDetailDeepLinkParser.swift
 //  Created by Sebastian Burrieza on 12/04/2026.
 
 import Foundation
@@ -9,7 +9,7 @@ import Navigation
 /// Registered at startup via ``AppRouter/registerAllDeepLinkParsers()``.
 /// Returns `nil` for any trigger that doesn't belong to this feature,
 /// allowing other parsers to handle it.
-public struct CardsTransactionDetailDeepLinkParser: DeepLinkParserProtocol {
+public struct TransactionDetailDeepLinkParser: DeepLinkParserProtocol {
 
     // MARK: - Notification types owned by this feature
 
@@ -38,7 +38,7 @@ public struct CardsTransactionDetailDeepLinkParser: DeepLinkParserProtocol {
             NotificationType(rawValue: type) != nil
         else { return nil }
 
-        return CardsTransactionDetailDeepLinkAction(
+        return TransactionDetailDeepLinkAction(
             queryParameters: userInfo as? [String: Any] ?? [:],
             routerService: routerService
         )
@@ -54,6 +54,6 @@ public struct CardsTransactionDetailDeepLinkParser: DeepLinkParserProtocol {
             .queryItems?
             .reduce(into: [String: Any]()) { $0[$1.name] = $1.value ?? "" } ?? [:]
 
-        return CardsTransactionDetailDeepLinkAction(queryParameters: params, routerService: routerService)
+        return TransactionDetailDeepLinkAction(queryParameters: params, routerService: routerService)
     }
 }
