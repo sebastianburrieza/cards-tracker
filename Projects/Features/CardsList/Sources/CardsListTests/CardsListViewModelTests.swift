@@ -9,15 +9,15 @@ final class CardsListTests: XCTestCase {
 
     var viewModel: ListViewModel!
     var mockRepository: MockCardsRepository!
-    var spyDelegate: SpyDelegate!
+    var mockDelegate: MockDelegate!
 
     override func setUp() {
         super.setUp()
         mockRepository = MockCardsRepository()
         Container.shared.cardsRepository.register { self.mockRepository }
         viewModel = ListViewModel()
-        spyDelegate = SpyDelegate()
-        viewModel.delegate = spyDelegate
+        mockDelegate = MockDelegate()
+        viewModel.delegate = mockDelegate
     }
 
     override func tearDown() {
@@ -25,7 +25,7 @@ final class CardsListTests: XCTestCase {
         Container.shared.cardsRepository.reset()
         viewModel = nil
         mockRepository = nil
-        spyDelegate = nil
+        mockDelegate = nil
     }
 
     // MARK: - fetchCards Success Tests
@@ -65,23 +65,6 @@ final class CardsListTests: XCTestCase {
     }
 
     // MARK: - fetchCards Failure Tests
-
-    func test_fetchCards_failure_callsDelegateShowError() async throws {
-        let expectedError = ServerError(
-            .cardNotFound,
-            title: "Card Not Found",
-            message: "The card you requested does not exist."
-        )
-        mockRepository.fetchCardsResult = .failure(expectedError)
-
-        await viewModel.fetchCards()
-
-        XCTAssertEqual(spyDelegate.showErrorCallCount, 1)
-        let capturedError = try XCTUnwrap(spyDelegate.capturedError)
-        XCTAssertEqual(capturedError.code, expectedError.code)
-        XCTAssertEqual(capturedError.title, expectedError.title)
-        XCTAssertEqual(capturedError.message, expectedError.message)
-    }
 
     func test_fetchCards_failure_cardsArrayRemainsEmpty() async throws {
         mockRepository.fetchCardsResult = .failure(ServerError.connection)
@@ -181,8 +164,8 @@ final class CardsListTests: XCTestCase {
 
         await viewModel.fetchCards()
 
-        let capturedError = try XCTUnwrap(spyDelegate.capturedError)
-        XCTAssertEqual(capturedError.code, .connectionError)
+        XCTAssertEqual(viewModel.errorTitle, "Connection error")
+        XCTAssertEqual(viewModel.errorMessage, "Check your internet connection and try again.")
     }
 
     func test_fetchCards_failure_unauthorized() async throws {
@@ -192,14 +175,14 @@ final class CardsListTests: XCTestCase {
 
         await viewModel.fetchCards()
 
-        let capturedError = try XCTUnwrap(spyDelegate.capturedError)
-        XCTAssertEqual(capturedError.code, .unauthorized)
+        XCTAssertEqual(viewModel.errorTitle, "Unauthorized")
+        XCTAssertEqual(viewModel.errorMessage, "Invalid credentials")
     }
 }
 
-// MARK: - SpyDelegate
+// MARK: - MockDelegate
 
-final class SpyDelegate: ListNavigationDelegate {
+final class MockDelegate: ListNavigationDelegate {
 
     var navigateToDetailCallCount = 0
     var showErrorCallCount = 0
@@ -215,29 +198,5 @@ final class SpyDelegate: ListNavigationDelegate {
     func showError(_ error: ServerError) {
         showErrorCallCount += 1
         capturedError = error
-    }
-}
-
-// MARK: - Card Mock Extension
-
-extension Card {
-    static func mock(id: String = UUID().uuidString,
-                     type: CardType = .creditPlastic,
-                     color: ColorCode = .GREEN,
-                     hexa: String? = nil,
-                     holderName: String = "Test User",
-                     limit: Int = 100000,
-                     available: Int = 50000,
-                     closingDate: Date = Date(),
-                     dueDate: Date = Date()) -> Card {
-        Card(id: id,
-             type: type,
-             color: color,
-             hexa: hexa,
-             holderName: holderName,
-             limit: limit,
-             available: available,
-             closingDate: closingDate,
-             dueDate: dueDate)
     }
 }
