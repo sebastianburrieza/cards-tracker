@@ -37,8 +37,15 @@ final class CardListItemViewModel {
 
     var dueDateLabel: String {
         daysUntilDue == 1
-            ? "card.dueDate.singular".localized
-            : "card.dueDate.plural".localized(daysUntilDue)
+            ? "DUEDATE_SINGULAR".localized
+            : "DUEDATE_PLURAL".localized(daysUntilDue)
+    }
+
+    // MARK: - Accessibility
+
+    /// A single string VoiceOver reads aloud for the whole card row.
+    var accessibilityLabel: String {
+        "\(card.holderName). Consumos: \(formattedAmountUsed). Disponible: \(formattedRemaining). \(dueDateLabel)."
     }
 
     // MARK: - Private helpers

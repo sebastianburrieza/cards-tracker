@@ -7,7 +7,9 @@
 "DETAIL_TITLE" = "Consumos";
 "DETAIL_AVAILABLE" = "Disponible %@";
 "DETAIL_PAUSE" = "Pausar";
+"DETAIL_ACTIVATE" = "Activar";
 "DETAIL_REPORT" = "Reportar";
+
 
 /* Errors */
 "ERROR_TITLE_GENERIC" = "Algo salió mal";

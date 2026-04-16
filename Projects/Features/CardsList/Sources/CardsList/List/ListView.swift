@@ -65,7 +65,9 @@ struct ListView: View {
     @ViewBuilder
     private var cardList: some View {
         ScrollView(showsIndicators: false) {
-            VStack(spacing: 16) {
+            // LazyVStack renders only the rows currently visible on screen.
+            // Unlike VStack, it does NOT build all cards at once — same idea as UITableView cell reuse.
+            LazyVStack(spacing: 16) {
                 ForEach(viewModel.cards) { card in
                     CardListItemView(viewModel: .init(card: card))
                         .onTapGesture {

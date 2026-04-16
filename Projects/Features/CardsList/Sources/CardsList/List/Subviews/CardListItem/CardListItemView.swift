@@ -39,6 +39,10 @@ struct CardListItemView: View {
         .background(Material.regular)
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: Palette.staticBlack.swiftUI.opacity(0.1), radius: 8, x: 0, y: 2)
+        // Accessibility: merge all child elements into one VoiceOver item
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(viewModel.accessibilityLabel)
+        .accessibilityHint("Double-tap to open card detail")
     }
 
     // MARK: Amount row

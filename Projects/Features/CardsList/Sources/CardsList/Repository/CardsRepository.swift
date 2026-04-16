@@ -78,34 +78,24 @@ final class CardsRepository: CardsRepositoryProtocol {
     }
 
     // MARK: - Write
+    //
+    // No real backend is available yet, so write operations return simulated success
+    // without hitting the network. The read operations (fetchCards, fetchTransactions)
+    // still exercise the full HTTP + decoding stack via GitHub raw JSON.
+    //
+    // To wire a real API: replace each `return .success(...)` with a `perform { ... }`
+    // block pointing at the real endpoint — no feature-layer code needs to change.
 
     func createCard(_ card: Card) async -> Result<Card, ServerError> {
-        guard let url = Endpoint.createCard else {
-            return .failure(ServerError(.invalidURL))
-        }
-        return await perform {
-            let request = try URLRequest.post(url: url, body: card)
-            return try await networkService.request(Card.self, for: request)
-        }
+        return .success(card)
     }
 
     func updateCard(_ card: Card) async -> Result<Card, ServerError> {
-        guard let url = Endpoint.card(id: card.id) else {
-            return .failure(ServerError(.invalidURL))
-        }
-        return await perform {
-            let request = try URLRequest.put(url: url, body: card)
-            return try await networkService.request(Card.self, for: request)
-        }
+        return .success(card)
     }
 
     func deleteCard(id: String) async -> Result<Void, ServerError> {
-        guard let url = Endpoint.card(id: id) else {
-            return .failure(ServerError(.invalidURL))
-        }
-        return await perform {
-            try await networkService.requestVoid(for: .delete(url: url))
-        }
+        return .success(())
     }
 
     // MARK: - Private

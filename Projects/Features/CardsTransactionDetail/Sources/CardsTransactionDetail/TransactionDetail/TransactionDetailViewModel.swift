@@ -3,6 +3,7 @@
 
 import SwiftUI
 import Factory
+import ResourcesUI
 import Extensions
 import CoreModels
 
@@ -26,7 +27,7 @@ final class TransactionDetailViewModel {
     var formattedDate: String = "1 de enero de 2026"
     var categoryName: String? = "Ninguna"
     var categoryIcon: String? = "questionmark"
-    var categoryColor: Color = .red
+    var categoryColor: Color = Palette.grayMedium.swiftUI
 
     var isLoading = true
     var errorMessage: String?
@@ -90,13 +91,8 @@ final class TransactionDetailViewModel {
     }
 
     private func colorForCategory(_ name: String?) -> Color {
-        guard let name = name?.lowercased() else { return .gray }
-        switch name {
-        case "delivery":   return .red
-        case "restaurant": return .orange
-        case "streaming":  return .blue
-        case "shopping":   return .purple
-        default:           return .gray
-        }
+        guard let name = name?.lowercased() else { return Palette.grayMedium.swiftUI }
+        let category = TransactionCategory(rawValue: name)
+        return category?.color ?? Palette.grayMedium.swiftUI
     }
 }
