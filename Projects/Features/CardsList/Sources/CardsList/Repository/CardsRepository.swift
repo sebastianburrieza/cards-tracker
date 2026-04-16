@@ -57,13 +57,23 @@ final class CardsRepository: CardsRepositoryProtocol {
         }
     }
 
-    func fetchTransactions(for cardId: String) async -> Result<[Transaction], ServerError> {
+    func fetchTransactions(cursor: String, cardId: String?, pageSize: Int) async -> Result<TransactionsPage, ServerError> {
         guard let url = Endpoint.transactions else {
             return .failure(ServerError(.invalidURL))
         }
         return await perform {
             let all = try await networkService.request([Transaction].self, for: URLRequest(url: url))
-            return all.filter { $0.cardId == cardId }
+            let filtered = cardId.map { id in all.filter { $0.cardId == id } } ?? all
+            let offset = Int(cursor) ?? 0
+            let slice = Array(filtered.dropFirst(offset).prefix(pageSize))
+            let nextOffset = offset + slice.count
+            let nextCursor: String? = nextOffset < filtered.count ? String(nextOffset) : nil
+            return TransactionsPage(
+                cursor: nextCursor,
+                results: slice,
+                totalAmount: filtered.reduce(0) { $0 + $1.amount },
+                totalTransactions: filtered.count
+            )
         }
     }
 

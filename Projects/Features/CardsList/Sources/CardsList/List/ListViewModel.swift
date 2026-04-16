@@ -40,7 +40,6 @@ final class ListViewModel {
             switch result {
             case .success(let cards):
                 self.cards = cards
-                showError()
             case .failure(let error):
                 showError(error)
             }

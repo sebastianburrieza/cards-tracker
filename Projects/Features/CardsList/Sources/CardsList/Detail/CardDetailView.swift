@@ -17,9 +17,9 @@ struct CardDetailView: View {
             background
                 .ignoresSafeArea()
 
-            VStack(spacing: 20) {
+            ScrollView(showsIndicators: false) {
 
-                transactionsList
+                transactionsListView
             }
         }
         .safeAreaInset(edge: .top) {
@@ -144,27 +144,17 @@ struct CardDetailView: View {
     }
 
     // MARK: Transactions list
-
+    
+    @State private var transactionsListViewModel = TransactionsListViewModel()
     @ViewBuilder
-    private var transactionsList: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(spacing: 0) {
-                ForEach(Array(viewModel.transactions.enumerated()), id: \.element.id) { index, transaction in
-                    TransactionItemView(viewModel: .init(transaction: transaction))
-                        .onTapGesture {
-                            viewModel.delegate?.navigateToTransactionDetail(id: transaction.id)
-                        }
-
-                    if index < viewModel.transactions.count - 1 {
-                        Divider()
-                            .padding(.leading, 60)
-                    }
-                }
+    private var transactionsListView: some View {
+        VStack {
+            TransactionsListView(viewModel: transactionsListViewModel, transactionTapped: { transaction in 
+                viewModel.delegate?.navigateToTransactionDetail(id: transaction.id)
+            })
+            .onAppear {
+                transactionsListViewModel.cardId = viewModel.card.id
             }
-            .background(Material.regular)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-            .shadow(color: Palette.staticBlack.swiftUI.opacity(0.1), radius: 8, x: 0, y: 2)
-            .padding(.horizontal, 16)
         }
     }
 }

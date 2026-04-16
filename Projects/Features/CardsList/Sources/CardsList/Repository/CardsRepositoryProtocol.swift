@@ -25,11 +25,15 @@ protocol CardsRepositoryProtocol {
     /// - Parameter id: The `id` of the card (UUID string).
     func fetchCard(id: String) async -> Result<Card, ServerError>
 
-    /// Fetches all transactions that belong to the given card.
+    /// Fetches a page of transactions, optionally filtered by card.
     ///
-    /// Retrieves the full transactions collection and filters by `cardId` client-side.
-    /// - Parameter cardId: The `id` of the card (UUID string).
-    func fetchTransactions(for cardId: String) async -> Result<[Transaction], ServerError>
+    /// Uses cursor-based pagination. Pass an empty string for the first page.
+    /// The returned `TransactionsPage.cursor` holds the next-page cursor, or `nil` when all pages have been loaded.
+    /// - Parameters:
+    ///   - cursor: Opaque pagination cursor. Pass `""` to start from the beginning.
+    ///   - cardId: Optional card filter. Pass `nil` to fetch transactions across all cards.
+    ///   - pageSize: Number of transactions to return per page.
+    func fetchTransactions(cursor: String, cardId: String?, pageSize: Int) async -> Result<TransactionsPage, ServerError>
 
     // MARK: - Write
 

@@ -29,7 +29,7 @@ final class MockCardsRepository: CardsRepositoryProtocol {
 
     var fetchCardsResult: Result<[Card], ServerError> = .success([])
     var fetchCardResult: Result<Card, ServerError> = .success(.mock())
-    var fetchTransactionsResult: Result<[Transaction], ServerError> = .success([])
+    var fetchTransactionsResult: Result<TransactionsPage, ServerError> = .success(TransactionsPage(cursor: nil, results: [], totalAmount: 0, totalTransactions: 0))
     var createCardResult: Result<Card, ServerError> = .success(.mock())
     var updateCardResult: Result<Card, ServerError> = .success(.mock())
     var deleteCardResult: Result<Void, ServerError> = .success(())
@@ -47,9 +47,9 @@ final class MockCardsRepository: CardsRepositoryProtocol {
         return fetchCardResult
     }
 
-    func fetchTransactions(for cardId: String) async -> Result<[Transaction], ServerError> {
+    func fetchTransactions(cursor: String, cardId: String?, pageSize: Int) async -> Result<TransactionsPage, ServerError> {
         fetchTransactionsCallCount += 1
-        capturedCardIds.append(cardId)
+        if let cardId { capturedCardIds.append(cardId) }
         return fetchTransactionsResult
     }
 
@@ -87,7 +87,7 @@ final class MockCardsRepository: CardsRepositoryProtocol {
         capturedDeletedId = nil
         fetchCardsResult = .success([])
         fetchCardResult = .success(.mock())
-        fetchTransactionsResult = .success([])
+        fetchTransactionsResult = .success(TransactionsPage(cursor: nil, results: [], totalAmount: 0, totalTransactions: 0))
         createCardResult = .success(.mock())
         updateCardResult = .success(.mock())
         deleteCardResult = .success(())

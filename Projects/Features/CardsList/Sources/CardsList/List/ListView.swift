@@ -109,8 +109,9 @@ private final class MockCardsRepository: CardsRepositoryProtocol {
         .success(Card.mocks.first!)
     }
     
-    func fetchTransactions(for cardId: String) async -> Result<[CoreModels.Transaction], ServerError> {
-        .success(CoreModels.Transaction.mocks.filter { $0.cardId == cardId })
+    func fetchTransactions(cursor: String, cardId: String?, pageSize: Int) async -> Result<TransactionsPage, ServerError> {
+        let filtered = cardId.map { id in CoreModels.Transaction.mocks.filter { $0.cardId == id } } ?? CoreModels.Transaction.mocks
+        return .success(TransactionsPage(cursor: nil, results: filtered, totalAmount: filtered.reduce(0) { $0 + $1.amount }, totalTransactions: filtered.count))
     }
 }
 

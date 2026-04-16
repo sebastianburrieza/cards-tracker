@@ -7,9 +7,10 @@ import Utilities
 import Extensions
 import CoreModels
 
-final class TransactionItemViewModel: ObservableObject {
+@Observable
+final class TransactionItemViewModel: Equatable, Identifiable {
 
-    let transaction: CoreModels.Transaction
+    var transaction: CoreModels.Transaction
 
     init(transaction: CoreModels.Transaction) {
         self.transaction = transaction
@@ -29,5 +30,22 @@ final class TransactionItemViewModel: ObservableObject {
     
     var categoryColor: Color {
         transaction.category?.color ?? Palette.grayMedium.swiftUI
+    }
+}
+
+extension TransactionItemViewModel {
+    
+    static func == (lhs: TransactionItemViewModel, rhs: TransactionItemViewModel) -> Bool {
+        lhs.transaction.id == rhs.transaction.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(transaction.id)
+    }
+    
+    static var placeHolder: [TransactionItemViewModel] {
+        return AnyIterator { }
+            .prefix(7)
+            .map { .init(transaction: CoreModels.Transaction.mock()) }
     }
 }

@@ -21,7 +21,8 @@ final class CardDetailViewModel {
     let card: Card
 
     var transactions: [CoreModels.Transaction] = []
-    var isLoading: Bool = false
+    var isLoading: Bool = true
+    var isFetching: Bool = false
     
     var errorTitle: String?
     var errorMessage: String?
@@ -40,21 +41,26 @@ final class CardDetailViewModel {
     // MARK: - Data loading
 
     /// Fetches all transactions for this card from the remote endpoint.
+//    func fetchTransactions() async {
+//        await MainActor.run { isLoading = true }
+//
+//        let result = await repository.fetchTransactions(for: card.id)
+//
+//        await MainActor.run {
+//            switch result {
+//            case .success(let transactions):
+//                self.transactions = transactions
+//            case .failure(let error):
+//                showError(error)
+//            }
+//            isLoading = false
+//        } 
+//    }
+    
     func fetchTransactions() async {
-        await MainActor.run { isLoading = true }
-
-        let result = await repository.fetchTransactions(for: card.id)
-
         await MainActor.run {
-            switch result {
-            case .success(let transactions):
-                self.transactions = transactions
-            case .failure(let error):
-                showError(error)
-            }
-            isLoading = false
+            isFetching = true
         }
-        
     }
 
     // MARK: - Formatted values
