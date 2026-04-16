@@ -36,10 +36,6 @@ struct CardDetailView: View {
             .background(Material.thin)
         }
         .task { await viewModel.fetchTransactions() }
-        .toastErrorView(title: viewModel.errorTitle ?? "",
-                        message: viewModel.errorMessage,
-                        duration: 3,
-                        isPresented: $viewModel.isError)
     }
 
     // MARK: Background

@@ -23,13 +23,6 @@ final class CardDetailViewModel {
     var transactions: [CoreModels.Transaction] = []
     var isLoading: Bool = true
     var isFetching: Bool = false
-    
-    var errorTitle: String?
-    var errorMessage: String?
-    var isError: Bool = false
-
-    @ObservationIgnored
-    @Injected(\.cardsRepository) private var repository
 
     @ObservationIgnored
     weak var delegate: CardDetailNavigationDelegate?
@@ -41,22 +34,6 @@ final class CardDetailViewModel {
     // MARK: - Data loading
 
     /// Fetches all transactions for this card from the remote endpoint.
-//    func fetchTransactions() async {
-//        await MainActor.run { isLoading = true }
-//
-//        let result = await repository.fetchTransactions(for: card.id)
-//
-//        await MainActor.run {
-//            switch result {
-//            case .success(let transactions):
-//                self.transactions = transactions
-//            case .failure(let error):
-//                showError(error)
-//            }
-//            isLoading = false
-//        } 
-//    }
-    
     func fetchTransactions() async {
         await MainActor.run {
             isFetching = true
@@ -78,10 +55,5 @@ final class CardDetailViewModel {
         )
         return CardsListStrings.Card.Detail.disponible(formatted)
     }
-    
-    func showError(_ error: ServerError? = nil) {
-        errorTitle = error?.title ?? "Algo salió mal"
-        errorMessage = error?.message ?? "Por favor intenta de nuevo más tarde"
-        isError = true
-    }
+
 }

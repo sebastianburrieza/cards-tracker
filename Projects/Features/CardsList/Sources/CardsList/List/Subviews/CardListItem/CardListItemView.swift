@@ -94,12 +94,3 @@ struct CardListItemView: View {
             .foregroundColor(Palette.grayUltraDark.swiftUI)
     }
 }
-
-// MARK: - Preview
-
-struct CardListItemView_Previews: PreviewProvider {
-    static var previews: some View {
-        CardListItemView(viewModel: .init(card: Card.mocks[0]))
-            .padding()
-    }
-}

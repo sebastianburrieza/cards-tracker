@@ -30,7 +30,7 @@ final class ListViewModel {
     // MARK: - Data loading
 
     /// Fetches the cards list from the remote endpoint.
-    /// Publishes results to ``cards`` or forwards the error to the delegate.
+    /// Publishes results to ``cards`` or forwards the error.
     func fetchCards() async {
         await MainActor.run { isLoading = true }
 
