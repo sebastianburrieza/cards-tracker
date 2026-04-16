@@ -45,14 +45,5 @@ extension CardDetailViewController: CardDetailNavigationDelegate {
         }
     }
 
-    func showError(_ error: ServerError) {
-        let alert = UIAlertController(
-            title: error.title ?? "Something went wrong",
-            message: error.message,
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
-    }
 }
 

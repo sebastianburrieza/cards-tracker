@@ -9,8 +9,6 @@ import CoreModels
 protocol ListNavigationDelegate: AnyObject {
     /// Called when the user selects a card to view its detail.
     func navigateToDetail(card: Card)
-    /// Called when a data operation fails.
-    func showError(_ error: ServerError)
 }
 
 @Observable
@@ -18,6 +16,10 @@ final class ListViewModel {
 
     var cards: [Card] = []
     var isLoading = false
+    
+    var errorTitle: String?
+    var errorMessage: String?
+    var isError: Bool = false
 
     @ObservationIgnored
     @Injected(\.cardsRepository) private var repository
@@ -38,10 +40,17 @@ final class ListViewModel {
             switch result {
             case .success(let cards):
                 self.cards = cards
+                showError()
             case .failure(let error):
-                delegate?.showError(error)
+                showError(error)
             }
             isLoading = false
         }
+    }
+    
+    func showError(_ error: ServerError? = nil) {
+        errorTitle = error?.title ?? "Algo salió mal"
+        errorMessage = error?.message ?? "Por favor intenta de nuevo más tarde"
+        isError = true
     }
 }

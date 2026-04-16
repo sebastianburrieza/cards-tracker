@@ -13,8 +13,6 @@ protocol CardDetailNavigationDelegate: AnyObject {
     func navigateToPrevious()
     /// Called when the user taps a transaction row.
     func navigateToTransactionDetail(id: String)
-    /// Called when a data operation fails.
-    func showError(_ error: ServerError)
 }
 
 @Observable
@@ -23,7 +21,11 @@ final class CardDetailViewModel {
     let card: Card
 
     var transactions: [CoreModels.Transaction] = []
-    var isLoading = false
+    var isLoading: Bool = false
+    
+    var errorTitle: String?
+    var errorMessage: String?
+    var isError: Bool = false
 
     @ObservationIgnored
     @Injected(\.cardsRepository) private var repository
@@ -48,7 +50,7 @@ final class CardDetailViewModel {
             case .success(let transactions):
                 self.transactions = transactions
             case .failure(let error):
-                delegate?.showError(error)
+                showError(error)
             }
             isLoading = false
         }
@@ -69,5 +71,11 @@ final class CardDetailViewModel {
             options: [.showCurrencySymbol, .maxFractionDigits(0)]
         )
         return CardsListStrings.Card.Detail.disponible(formatted)
+    }
+    
+    func showError(_ error: ServerError? = nil) {
+        errorTitle = error?.title ?? "Algo salió mal"
+        errorMessage = error?.message ?? "Por favor intenta de nuevo más tarde"
+        isError = true
     }
 }
