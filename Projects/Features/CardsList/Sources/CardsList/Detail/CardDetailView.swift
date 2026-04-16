@@ -85,7 +85,7 @@ struct CardDetailView: View {
     @ViewBuilder
     private var headerSection: some View {
         VStack(spacing: 4) {
-            Text(CardsListStrings.Card.Detail.consumos)
+            Text("DETAIL_TITLE".localized)
                 .font(Fonts.regular(size: 14))
                 .foregroundColor(Palette.grayMedium.swiftUI)
 
@@ -111,7 +111,7 @@ struct CardDetailView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "pause.fill")
                         .font(.system(size: 14, weight: .semibold))
-                    Text(CardsListStrings.Card.Detail.pausar)
+                    Text("DETAIL_PAUSE".localized)
                         .font(Fonts.medium(size: 16))
                 }
                 .foregroundColor(Palette.staticWhite.swiftUI)
@@ -127,7 +127,7 @@ struct CardDetailView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .font(.system(size: 14, weight: .semibold))
-                    Text(CardsListStrings.Card.Detail.reportar)
+                    Text("DETAIL_REPORT".localized)
                         .font(Fonts.medium(size: 16))
                 }
                 .foregroundColor(Palette.staticWhite.swiftUI)

@@ -37,8 +37,8 @@ final class CardListItemViewModel {
 
     var dueDateLabel: String {
         daysUntilDue == 1
-            ? CardsListStrings.Card.DueDate.singular
-            : CardsListStrings.Card.DueDate.plural(daysUntilDue)
+            ? "card.dueDate.singular".localized
+            : "card.dueDate.plural".localized(daysUntilDue)
     }
 
     // MARK: - Private helpers

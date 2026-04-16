@@ -1,0 +1,22 @@
+/* Card List */
+"CARDLIST_TITLE" = "Seguimiento de tarjetas";
+"DUEDATE_SINGULAR" = "Falta 1 día para el vencimiento";
+"DUEDATE_PLURAL" = "Faltan %d días para el vencimiento";
+
+/* Card Detail */
+"DETAIL_TITLE" = "Consumos";
+"DETAIL_AVAILABLE" = "Disponible %@";
+"DETAIL_PAUSE" = "Pausar";
+"DETAIL_REPORT" = "Reportar";
+
+/* Errors */
+"ERROR_TITLE_GENERIC" = "Algo salió mal";
+"ERROR_MESSAGE_GENERIC" = "Por favor intenta de nuevo más tarde";
+"FAILURE_TRANSACTIONS" = "No pudimos cargar las transacciones de esta tarjeta.";
+"NO_TRANSACTIONS" = "Sin transacciones en esta tarjeta.";
+
+/* COMPONENTS */
+/* CardView */
+
+"PAUSED" = "Pausada";
+"VIRTUAL" = "Virtual";

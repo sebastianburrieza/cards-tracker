@@ -90,7 +90,7 @@ struct TransactionDetailView: View {
             }
 
             // Share button
-            actionButton(title: "Compartir", icon: "square.and.arrow.up") {
+            actionButton(title: "SHARE".localized, icon: "square.and.arrow.up") {
                 viewModel.share()
             }
             .padding(.top, 12)
@@ -98,7 +98,7 @@ struct TransactionDetailView: View {
             .isSkeletonView(viewModel.isLoading)
 
             // Close button
-            actionButton(title: "Cerrar", icon: nil) {
+            actionButton(title: "CLOSE".localized, icon: nil) {
                 dismissView()
             }
             .padding(.top, 8)
@@ -108,61 +108,13 @@ struct TransactionDetailView: View {
         }
     }
 
-    // MARK: - Skeleton content
-
-    @ViewBuilder
-    private var skeletonContent: some View {
-        VStack(spacing: 0) {
-            // Icon placeholder
-            skeletonPill(width: 40, height: 40)
-                .clipShape(Circle())
-                .padding(.top, 28)
-
-            // Merchant name placeholder
-            skeletonPill(width: 140, height: 20)
-                .padding(.top, 14)
-
-            // Amount placeholder
-            skeletonPill(width: 200, height: 28)
-                .padding(.top, 12)
-
-            // Date placeholder
-            skeletonPill(width: 160, height: 14)
-                .padding(.top, 8)
-
-            // Category pill placeholder
-            skeletonPill(width: .infinity, height: 60)
-                .padding(.top, 20)
-                .padding(.horizontal, 27)
-
-            // Button placeholder
-            skeletonPill(width: .infinity, height: 50)
-                .padding(.top, 12)
-                .padding(.horizontal, 27)
-
-            // Button placeholder
-            skeletonPill(width: .infinity, height: 50)
-                .padding(.top, 8)
-                .padding(.horizontal, 27)
-                .padding(.bottom, 28)
-        }
-    }
-
-    @ViewBuilder
-    private func skeletonPill(width: CGFloat, height: CGFloat) -> some View {
-        RoundedRectangle(cornerRadius: height / 2, style: .continuous)
-            .fill(Palette.grayUltraLight.swiftUI)
-            .frame(maxWidth: width == .infinity ? .infinity : width, minHeight: height, maxHeight: height)
-            .shimmer()
-    }
-
     // MARK: - Category pill
 
     @ViewBuilder
     private func categoryPill(name: String) -> some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
-                Text("Categoría")
+                Text("CATEGORY".localized)
                     .font(Fonts.medium(size: 17) as Font)
                     .foregroundStyle(Palette.grayDark.swiftUI)
 
@@ -221,77 +173,3 @@ struct TransactionDetailView: View {
         }
     }
 }
-
-// MARK: - Color hex helper
-
-private extension Color {
-    init(hex: UInt, alpha: Double = 1.0) {
-        self.init(
-            .sRGB,
-            red: Double((hex >> 16) & 0xFF) / 255,
-            green: Double((hex >> 8) & 0xFF) / 255,
-            blue: Double(hex & 0xFF) / 255,
-            opacity: alpha
-        )
-    }
-}
-
-// MARK: - Shimmer modifier
-
-private struct ShimmerModifier: ViewModifier {
-
-    @State private var phase: CGFloat = -1
-
-    func body(content: Content) -> some View {
-        content
-            .overlay(
-                GeometryReader { geo in
-                    LinearGradient(
-                        colors: [.clear, .white.opacity(0.4), .clear],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                    .frame(width: geo.size.width * 0.6)
-                    .offset(x: phase * geo.size.width)
-                }
-                .clipped()
-            )
-            .onAppear {
-                withAnimation(.linear(duration: 1.2).repeatForever(autoreverses: false)) {
-                    phase = 1.5
-                }
-            }
-    }
-}
-
-private extension View {
-    func shimmer() -> some View {
-        modifier(ShimmerModifier())
-    }
-}
-
-// MARK: - Preview
-
-#if DEBUG
-#Preview("Loading") {
-    TransactionDetailView(
-        viewModel: TransactionDetailViewModel(transactionId: "mock-1")
-    )
-}
-
-#Preview("Loaded") {
-    TransactionDetailView(
-        viewModel: {
-            let vm = TransactionDetailViewModel(transactionId: "mock-1")
-            vm.merchantName = "Pedidos Ya"
-            vm.formattedAmount = "$ 37.230,00"
-            vm.formattedDate = "2 de marzo de 2026"
-            vm.categoryName = "Delivery"
-            vm.categoryIcon = "scooter"
-            vm.categoryColor = .red
-            vm.isLoading = false
-            return vm
-        }()
-    )
-}
-#endif

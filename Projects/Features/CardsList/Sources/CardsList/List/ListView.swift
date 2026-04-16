@@ -53,7 +53,7 @@ struct ListView: View {
         VStack {
             NavigationBarView(
                 middleView: AnyView(
-                    Text(CardsListStrings.Card.List.title)
+                    Text("CARDLIST_TITLE".localized)
                         .font(Fonts.medium(size: 21))
                 )
             )

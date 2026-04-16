@@ -48,8 +48,8 @@ final class ListViewModel {
     }
     
     func showError(_ error: ServerError? = nil) {
-        errorTitle = error?.title ?? "Algo salió mal"
-        errorMessage = error?.message ?? "Por favor intenta de nuevo más tarde"
+        errorTitle = error?.title ?? "ERROR_TITLE_GENERIC".localized
+        errorMessage = error?.message ?? "ERROR_MESSAGE_GENERIC".localized
         isError = true
     }
 }
