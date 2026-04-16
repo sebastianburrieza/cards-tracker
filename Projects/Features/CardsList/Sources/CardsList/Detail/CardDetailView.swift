@@ -10,7 +10,7 @@ import CoreModels
 
 struct CardDetailView: View {
 
-    @ObservedObject var viewModel: CardDetailViewModel
+    @State var viewModel: CardDetailViewModel
 
     var body: some View {
         ZStack {
@@ -107,7 +107,7 @@ struct CardDetailView: View {
         HStack(spacing: 12) {
             Button(action: {
                 Haptic.selection()
-            }) {
+            }, label: {
                 HStack(spacing: 8) {
                     Image(systemName: "pause.fill")
                         .font(.system(size: 14, weight: .semibold))
@@ -119,11 +119,11 @@ struct CardDetailView: View {
                 .padding(.vertical, 12)
                 .background(Palette.green.swiftUI)
                 .clipShape(Capsule())
-            }
+            })
 
             Button(action: {
                 Haptic.selection()
-            }) {
+            }, label: {
                 HStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .font(.system(size: 14, weight: .semibold))
@@ -135,7 +135,7 @@ struct CardDetailView: View {
                 .padding(.vertical, 12)
                 .background(Palette.orange.swiftUI)
                 .clipShape(Capsule())
-            }
+            })
         }
     }
 
@@ -170,13 +170,26 @@ struct CardDetailView: View {
 #if DEBUG
 struct CardDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        let _ = Container.shared.cardsRepository.register { MockCardsRepositoryForDetail() }
+        _ = Container.shared.cardsRepository.register { MockCardsRepositoryForDetail() }
         return CardDetailView(viewModel: .init(card: Card.mocks[0]))
     }
 }
 
 private final class MockCardsRepositoryForDetail: CardsRepositoryProtocol {
+    func createCard(_ card: Card) async -> Result<Card, ServerError> {
+        .failure(.unexpected)
+    }
+    
+    func updateCard(_ card: Card) async -> Result<Card, ServerError> {
+        .failure(.unexpected)
+    }
+    
+    func deleteCard(id: String) async -> Result<Void, ServerError> {
+        .failure(.unexpected)
+    }
+    
     func fetchCards() async -> Result<[Card], ServerError> { .success(Card.mocks) }
+    
     func fetchTransactions(for cardId: String) async -> Result<[Transaction], ServerError> {
         .success(Transaction.mocks.filter { $0.cardId == cardId })
     }

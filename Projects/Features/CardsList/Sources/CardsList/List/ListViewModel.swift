@@ -19,8 +19,10 @@ final class ListViewModel {
     var cards: [Card] = []
     var isLoading = false
 
-    @Injected(\.cardsRepository) @ObservationIgnored private var repository
+    @ObservationIgnored
+    @Injected(\.cardsRepository) private var repository
 
+    @ObservationIgnored
     weak var delegate: ListNavigationDelegate?
 
     // MARK: - Data loading
@@ -29,7 +31,6 @@ final class ListViewModel {
     /// Publishes results to ``cards`` or forwards the error to the delegate.
     func fetchCards() async {
         await MainActor.run { isLoading = true }
-        defer { isLoading = false }
 
         let result = await repository.fetchCards()
 
@@ -40,6 +41,7 @@ final class ListViewModel {
             case .failure(let error):
                 delegate?.showError(error)
             }
+            isLoading = false
         }
     }
 }

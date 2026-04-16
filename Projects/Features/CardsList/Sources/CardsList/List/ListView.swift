@@ -80,13 +80,26 @@ struct ListView: View {
 struct ListView_Previews: PreviewProvider {
     static var previews: some View {
         let vm = ListViewModel()
-        let _ = Container.shared.cardsRepository.register { MockCardsRepository() }
+        _ = Container.shared.cardsRepository.register { MockCardsRepository() }
         return ListView(viewModel: vm)
     }
 }
 
 private final class MockCardsRepository: CardsRepositoryProtocol {
+    func createCard(_ card: Card) async -> Result<Card, ServerError> {
+        .failure(.unexpected)
+    }
+    
+    func updateCard(_ card: Card) async -> Result<Card, ServerError> {
+        .failure(.unexpected)
+    }
+    
+    func deleteCard(id: String) async -> Result<Void, ServerError> {
+        .failure(.unexpected)
+    }
+    
     func fetchCards() async -> Result<[Card], ServerError> { .success(Card.mocks) }
+    
     func fetchTransactions(for cardId: String) async -> Result<[Transaction], ServerError> {
         .success(Transaction.mocks.filter { $0.cardId == cardId })
     }

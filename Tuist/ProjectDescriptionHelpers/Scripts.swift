@@ -9,7 +9,8 @@ public extension TargetScript {
             script: """
             export PATH="$PATH:/opt/homebrew/bin"
             if which swiftlint > /dev/null; then
-                swiftlint --config "${SRCROOT}/../../../.swiftlint.yml"
+                REPO_ROOT=$(git -C "${SRCROOT}" rev-parse --show-toplevel)
+                swiftlint --config "${REPO_ROOT}/.swiftlint.yml"
             else
                 echo "warning: SwiftLint not installed — run: brew install swiftlint"
             fi

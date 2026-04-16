@@ -8,23 +8,24 @@ import CoreServices
 
 /// Live ``CardsRepositoryProtocol`` implementation backed by ``NetworkServiceProtocol``.
 ///
-/// Both endpoints point to GitHub raw JSON files — a zero-infrastructure mock backend
+/// Both read endpoints point to GitHub raw JSON files — a zero-infrastructure mock backend
 /// that still exercises the full HTTP + decoding stack.
+/// Write endpoints point to a placeholder base URL and will work once a real API is available.
 ///
 /// Swap the URLs for a real API without touching any feature-layer code.
 final class CardsRepository: CardsRepositoryProtocol {
 
-    private enum RequestPath: String {
-        case cards = "MockData/cards.json"
-        case transactions = "MockData/transactions.json"
+    private enum Endpoint {
+        // Read — GitHub raw JSON mock
+        static let cards    = URL(string: "https://raw.githubusercontent.com/sebastianburrieza/cards-tracker/main/MockData/cards.json")
+        static let transactions = URL(string: "https://raw.githubusercontent.com/sebastianburrieza/cards-tracker/main/MockData/transactions.json")
 
-        var baseUrl: String {
-            "https://raw.githubusercontent.com/sebastianburrieza/cards-tracker/main"
+        // Write — replace with real API base URL when available
+        static func card(id: String) -> URL? {
+            URL(string: "https://api.cardstracker.com/cards/\(id)")
         }
-
-        var url: URL? {
-            guard let url = URL(string: "\(baseUrl)/\(rawValue)") else { return nil }
-            return url
+        static var createCard: URL? {
+            URL(string: "https://api.cardstracker.com/cards")
         }
     }
 
@@ -34,33 +35,62 @@ final class CardsRepository: CardsRepositoryProtocol {
         self.networkService = networkService
     }
 
-    // MARK: - CardsRepositoryProtocol
+    // MARK: - Read
 
     func fetchCards() async -> Result<[Card], ServerError> {
-        guard let url = RequestPath.cards.url else {
+        guard let url = Endpoint.cards else {
             return .failure(ServerError(.invalidURL))
         }
-        let request = URLRequest(url: url)
-        do {
-            let cards = try await networkService.request([Card].self, for: request)
-            return .success(cards)
-        } catch let error as ServerError {
-            return .failure(error)
-        } catch let error as NetworkError {
-            return .failure(error.asServerError())
-        } catch {
-            return .failure(.unexpected)
-        }
+        return await perform { try await networkService.request([Card].self, for: URLRequest(url: url)) }
     }
 
     func fetchTransactions(for cardId: String) async -> Result<[Transaction], ServerError> {
-        guard let url = RequestPath.transactions.url else {
+        guard let url = Endpoint.transactions else {
             return .failure(ServerError(.invalidURL))
         }
-        let request = URLRequest(url: url)
+        return await perform {
+            let all = try await networkService.request([Transaction].self, for: URLRequest(url: url))
+            return all.filter { $0.cardId == cardId }
+        }
+    }
+
+    // MARK: - Write
+
+    func createCard(_ card: Card) async -> Result<Card, ServerError> {
+        guard let url = Endpoint.createCard else {
+            return .failure(ServerError(.invalidURL))
+        }
+        return await perform {
+            let request = try URLRequest.post(url: url, body: card)
+            return try await networkService.request(Card.self, for: request)
+        }
+    }
+
+    func updateCard(_ card: Card) async -> Result<Card, ServerError> {
+        guard let url = Endpoint.card(id: card.id) else {
+            return .failure(ServerError(.invalidURL))
+        }
+        return await perform {
+            let request = try URLRequest.put(url: url, body: card)
+            return try await networkService.request(Card.self, for: request)
+        }
+    }
+
+    func deleteCard(id: String) async -> Result<Void, ServerError> {
+        guard let url = Endpoint.card(id: id) else {
+            return .failure(ServerError(.invalidURL))
+        }
+        return await perform {
+            try await networkService.requestVoid(for: .delete(url: url))
+        }
+    }
+
+    // MARK: - Private
+
+    /// Wraps a throwing network call into a `Result`, mapping ``NetworkError`` to ``ServerError``.
+    private func perform<T>(_ work: () async throws -> T) async -> Result<T, ServerError> {
         do {
-            let all = try await networkService.request([Transaction].self, for: request)
-            return .success(all.filter { $0.cardId == cardId })
+            return .success(try await work())
         } catch let error as ServerError {
             return .failure(error)
         } catch let error as NetworkError {

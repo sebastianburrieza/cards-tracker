@@ -14,13 +14,6 @@ let project = Project(
             deploymentTargets: defaultDeploymentTarget,
             infoPlist: .extendingDefault(with: [
                 "UILaunchScreen": .dictionary([:]),
-                "UIAppFonts": .array([
-                    .string("Fonts/SF-Pro-Rounded-Heavy.otf"),
-                    .string("Fonts/SF-Pro-Rounded-Bold.otf"),
-                    .string("Fonts/SF-Pro-Rounded-Medium.otf"),
-                    .string("Fonts/SF-Pro-Rounded-Regular.otf"),
-                    .string("Fonts/SF-Pro-Rounded-Thin.otf"),
-                ]),
             ]),
             sources: ["Sources/CardsTracker/**"],
             resources: ["Resources/**"],
