@@ -17,11 +17,24 @@ public struct Card: Identifiable, Hashable, Codable {
 
     public let limit: Int
     public let available: Int
-    
+
     public let closingDate: Date
     public let dueDate: Date
-    
-    public init(id: String, type: CardType, color: ColorCode, hexa: String?, holderName: String, limit: Int, available: Int, closingDate: Date, dueDate: Date) {
+
+    /// Whether the card is currently paused by the user.
+    /// Defaults to `false` when absent from the server response.
+    public let isPaused: Bool
+
+    public init(id: String,
+                type: CardType,
+                color: ColorCode,
+                hexa: String?,
+                holderName: String,
+                limit: Int,
+                available: Int,
+                closingDate: Date,
+                dueDate: Date,
+                isPaused: Bool = false) {
         self.id = id
         self.type = type
         self.color = color
@@ -31,6 +44,39 @@ public struct Card: Identifiable, Hashable, Codable {
         self.available = available
         self.closingDate = closingDate
         self.dueDate = dueDate
+        self.isPaused = isPaused
+    }
+
+    // MARK: - Mutations
+
+    /// Returns a copy of this card with `isPaused` set to the given value.
+    /// Because `Card` is a struct with `let` properties we can't mutate in place —
+    /// this is the Swift equivalent of Kotlin's `data class copy(isPaused = ...)`.
+    public func copy(isPaused: Bool) -> Card {
+        Card(id: id, type: type, color: color, hexa: hexa,
+             holderName: holderName, limit: limit, available: available,
+             closingDate: closingDate, dueDate: dueDate, isPaused: isPaused)
+    }
+
+    // MARK: - Codable
+
+    enum CodingKeys: String, CodingKey {
+        case id, type, color, hexa, holderName, limit, available, closingDate, dueDate, isPaused
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        type = try container.decode(CardType.self, forKey: .type)
+        color = try container.decode(ColorCode.self, forKey: .color)
+        hexa = try container.decodeIfPresent(String.self, forKey: .hexa)
+        holderName = try container.decode(String.self, forKey: .holderName)
+        limit = try container.decode(Int.self, forKey: .limit)
+        available = try container.decode(Int.self, forKey: .available)
+        closingDate = try container.decode(Date.self, forKey: .closingDate)
+        dueDate = try container.decode(Date.self, forKey: .dueDate)
+        // `isPaused` may be absent from older server responses — default to false
+        isPaused = try container.decodeIfPresent(Bool.self, forKey: .isPaused) ?? false
     }
 }
 

@@ -40,5 +40,9 @@ struct TransactionItemView: View {
         .onTapGesture {
             onTapped?(viewModel.transaction)
         }
+        // Accessibility: merge icon + texts + amount into one VoiceOver item
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(viewModel.transaction.merchantName), \(viewModel.formattedAmount), \(viewModel.formattedDate)")
+        .accessibilityHint("Double-tap to see transaction detail")
     }
 }

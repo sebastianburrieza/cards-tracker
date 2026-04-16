@@ -44,8 +44,10 @@ extension TransactionItemViewModel {
     }
     
     static var placeHolder: [TransactionItemViewModel] {
-        return AnyIterator { }
-            .prefix(7)
-            .map { .init(transaction: CoreModels.Transaction.mock()) }
+        // Each placeholder needs a unique id so LazyVStack doesn't collide on the ForEach key.
+        // Transaction.mock() always returns the same hardcoded UUID, so we override it per index.
+        return (0..<7).map { index in
+            .init(transaction: CoreModels.Transaction.mock(id: "placeholder-\(index)"))
+        }
     }
 }

@@ -3,6 +3,7 @@
 
 import Foundation
 import CoreModels
+import CoreServices
 
 /// Data access interface for the CardsTransactionDetail feature.
 ///
@@ -14,15 +15,25 @@ protocol TransactionDetailRepositoryProtocol {
 
     /// Fetches a single transaction by its identifier.
     /// - Parameter id: The transaction UUID string.
-    /// - Throws: On HTTP or decoding failures.
+    /// - Throws: ``TransactionDetailError/notFound`` when no match exists, or a network/decoding error.
     func fetchTransaction(id: String) async throws -> TransactionDetail
+}
+
+// MARK: - Errors
+
+enum TransactionDetailError: Error, LocalizedError {
+    case notFound
+
+    var errorDescription: String? {
+        switch self {
+        case .notFound: return "Transaction not found."
+        }
+    }
 }
 
 // MARK: - TransactionDetail model
 
 /// Lightweight model that holds everything the detail screen needs.
-/// Decoupled from the CardsList `Transaction` type until the models are
-/// migrated to CoreModels.
 struct TransactionDetail: Identifiable, Hashable {
     let id: String
     let merchantName: String
@@ -35,26 +46,45 @@ struct TransactionDetail: Identifiable, Hashable {
     let categoryIcon: String?
 }
 
-// MARK: - Mock implementation
+// MARK: - Live implementation
 
-/// Returns hardcoded data so we can develop the UI without a backend.
-/// Swap for a real implementation backed by ``NetworkServiceProtocol`` later.
-final class MockTransactionDetailRepository: TransactionDetailRepositoryProtocol {
+/// Production ``TransactionDetailRepositoryProtocol`` backed by ``NetworkServiceProtocol``.
+///
+/// Fetches the full transactions list from the GitHub raw JSON mock and filters by `id`.
+/// Swap the endpoint for a real `/transactions/{id}` URL when available.
+final class TransactionDetailRepository: TransactionDetailRepositoryProtocol {
+
+    private static let transactionsURL = URL(
+        string: "https://raw.githubusercontent.com/sebastianburrieza/cards-tracker/main/MockData/transactions.json"
+    )
+
+    private let networkService: any NetworkServiceProtocol
+
+    init(networkService: any NetworkServiceProtocol) {
+        self.networkService = networkService
+    }
 
     func fetchTransaction(id: String) async throws -> TransactionDetail {
-        // Simulate network delay
-        try await Task.sleep(nanoseconds: 800_000_000)
+        guard let url = Self.transactionsURL else {
+            throw URLError(.badURL)
+        }
+
+        let all = try await networkService.request([Transaction].self, for: URLRequest(url: url))
+
+        guard let transaction = all.first(where: { $0.id == id }) else {
+            throw TransactionDetailError.notFound
+        }
 
         return TransactionDetail(
-            id: id,
-            merchantName: "Pedidos Ya",
-            date: Date(timeIntervalSince1970: 1_772_409_600), // 2 de marzo 2026
-            amount: 3_723_000,
-            currency: .ARS,
-            installment: nil,
-            totalInstallments: nil,
-            categoryName: "Delivery",
-            categoryIcon: "scooter"
+            id: transaction.id,
+            merchantName: transaction.merchantName,
+            date: transaction.date,
+            amount: transaction.amount,
+            currency: transaction.currency,
+            installment: transaction.installment,
+            totalInstallments: transaction.totalInstallments,
+            categoryName: transaction.category?.rawValue,
+            categoryIcon: transaction.category?.icon
         )
     }
 }

@@ -2,6 +2,7 @@
 //  Created by Sebastian Burrieza on 12/04/2026.
 
 import Factory
+import CoreServices
 
 extension Container {
 
@@ -12,6 +13,6 @@ extension Container {
     /// Container.shared.transactionDetailRepository.register { MockTransactionDetailRepository() }
     /// ```
     var transactionDetailRepository: Factory<any TransactionDetailRepositoryProtocol> {
-        self { MockTransactionDetailRepository() }.singleton
+        self { TransactionDetailRepository(networkService: self.networkService()) }.singleton
     }
 }

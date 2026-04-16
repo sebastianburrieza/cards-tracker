@@ -41,7 +41,8 @@ struct TransactionsListView: View {
     
     @ViewBuilder
     private func transactionsView(_ items: [TransactionItemViewModel]) -> some View {
-        VStack {
+        // LazyVStack: only renders transaction rows that are currently visible.
+        LazyVStack {
             ForEach(Array(items.enumerated()), id: \.element.transaction.id) { index, item in
                 TransactionItemView(viewModel: item, onTapped: { transaction in
                     transactionTapped(transaction) })

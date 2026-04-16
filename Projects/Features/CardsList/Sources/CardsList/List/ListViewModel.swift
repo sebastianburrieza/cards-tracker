@@ -16,7 +16,7 @@ final class ListViewModel {
 
     var cards: [Card] = []
     var isLoading = false
-    
+
     var errorTitle: String?
     var errorMessage: String?
     var isError: Bool = false
@@ -30,7 +30,6 @@ final class ListViewModel {
     // MARK: - Data loading
 
     /// Fetches the cards list from the remote endpoint.
-    /// Publishes results to ``cards`` or forwards the error.
     func fetchCards() async {
         await MainActor.run { isLoading = true }
 
@@ -46,7 +45,7 @@ final class ListViewModel {
             isLoading = false
         }
     }
-    
+
     func showError(_ error: ServerError? = nil) {
         errorTitle = error?.title ?? "ERROR_TITLE_GENERIC".localized
         errorMessage = error?.message ?? "ERROR_MESSAGE_GENERIC".localized

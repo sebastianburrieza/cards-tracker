@@ -29,18 +29,21 @@ struct TransactionDetailView: View {
                     Spacer()
 
                     dataContent
-                        .background(Color.white)
+                        .background(Material.thin)
                         .clipShape(RoundedRectangle(cornerRadius: 40, style: .continuous))
                         .shadow(color: .black.opacity(0.1), radius: 6, x: 0, y: 4)
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 10)
                         .padding(.bottom, 10)
                 }
                 .offset(y: isShowing ? 0 : height)
+                .opacity(isShowing ? 1 : 0)
+                .padding(.bottom, 10)
+                .edgesIgnoringSafeArea(.bottom)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         .onAppear {
-            withAnimation(.timingCurve(0.45, 0.25, 0.15, 1.05, duration: 0.5)) {
+            withAnimation(.timingCurve(0.45, 0.25, 0.15, 1.05, duration: 0.4)) {
                 isShowing = true
             }
         }
@@ -62,21 +65,21 @@ struct TransactionDetailView: View {
 
             // Merchant name
             Text(viewModel.merchantName)
-                .font(Fonts.bold(size: 24) as Font)
-                .foregroundStyle(Color(hex: 0x19191B))
+                .font(Fonts.bold(size: 24))
+                .foregroundStyle(Palette.grayDark.swiftUI)
                 .padding(.top, 12)
                 .isSkeletonView(viewModel.isLoading)
 
             // Amount
             Text(viewModel.formattedAmount)
-                .font(Fonts.bold(size: 32) as Font)
-                .foregroundStyle(Palette.staticBlack.swiftUI)
+                .font(Fonts.bold(size: 32))
+                .foregroundStyle(Palette.black.swiftUI)
                 .padding(.top, 8)
                 .isSkeletonView(viewModel.isLoading)
 
             // Date
             Text(viewModel.formattedDate)
-                .font(Fonts.medium(size: 16) as Font)
+                .font(Fonts.medium(size: 16))
                 .foregroundStyle(Palette.grayMedium.swiftUI)
                 .padding(.top, 4)
                 .isSkeletonView(viewModel.isLoading)
@@ -115,11 +118,11 @@ struct TransactionDetailView: View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
                 Text("CATEGORY".localized)
-                    .font(Fonts.medium(size: 17) as Font)
+                    .font(Fonts.medium(size: 17))
                     .foregroundStyle(Palette.grayDark.swiftUI)
 
                 Text(name)
-                    .font(Fonts.bold(size: 20) as Font)
+                    .font(Fonts.bold(size: 20))
                     .foregroundStyle(viewModel.categoryColor)
             }
 
@@ -149,7 +152,7 @@ struct TransactionDetailView: View {
                         .font(.system(size: 18, weight: .semibold))
                 }
                 Text(title)
-                    .font(Fonts.bold(size: 19) as Font)
+                    .font(Fonts.bold(size: 19))
             }
             .foregroundStyle(Palette.green.swiftUI)
             .frame(maxWidth: .infinity)
