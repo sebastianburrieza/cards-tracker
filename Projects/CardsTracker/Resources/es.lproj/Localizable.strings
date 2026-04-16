@@ -1,13 +1,2 @@
 /* App */
 "appTitle" = "Cards Tracker";
-
-/* Card List */
-"card.list.title" = "Seguimiento de tarjetas";
-"card.dueDate.singular" = "falta 1 día para el vencimiento";
-"card.dueDate.plural" = "faltan %d días para el vencimiento";
-
-/* Card Detail */
-"card.detail.consumos" = "Consumos";
-"card.detail.disponible" = "Disponible %@";
-"card.detail.pausar" = "Pausar";
-"card.detail.reportar" = "Reportar";

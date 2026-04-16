@@ -53,7 +53,7 @@ final class CardDetailViewModel {
             currency: .ARS,
             options: [.showCurrencySymbol, .maxFractionDigits(0)]
         )
-        return CardsListStrings.Card.Detail.disponible(formatted)
+        return "DETAIL_AVAILABLE".localized(formatted)
     }
 
 }

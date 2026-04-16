@@ -20,7 +20,7 @@ struct FailureTransactionsView: View {
                         .foregroundColor(Palette.yellow.swiftUI)
                         .frame(width: 40, height: 40, alignment: .center)
                     
-                    Text("FAILURE_TRANSACTIONS")
+                    Text("FAILURE_TRANSACTIONS".localized)
                         .font(Fonts.medium(size: 15))
                         .multilineTextAlignment(.center)
                         .foregroundColor(Palette.yellow.swiftUI)

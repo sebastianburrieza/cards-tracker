@@ -42,12 +42,3 @@ struct TransactionItemView: View {
         }
     }
 }
-
-// MARK: - Preview
-
-struct TransactionItemView_Previews: PreviewProvider {
-    static var previews: some View {
-        TransactionItemView(viewModel: .init(transaction: CoreModels.Transaction.mock()))
-            .previewLayout(.sizeThatFits)
-    }
-}

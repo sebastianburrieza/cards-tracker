@@ -167,7 +167,7 @@ struct CardView: View {
     
     @ViewBuilder
     private var virtualLabel: some View {
-        Text("Virtual".uppercased())
+        Text("VIRTUAL".localized.uppercased())
             .font(.system(size: 12, weight: .bold))
             .foregroundColor(.white)
             .padding(.horizontal, 8)
@@ -180,7 +180,7 @@ struct CardView: View {
     
     @ViewBuilder
     private var pausedLabel: some View {
-        Text("Pausada".uppercased())
+        Text("PAUSED".localized.uppercased())
             .font(.system(size: 12, weight: .bold))
             .foregroundColor(Palette.grayUltraDark.swiftUI)
             .padding(.horizontal, 8)

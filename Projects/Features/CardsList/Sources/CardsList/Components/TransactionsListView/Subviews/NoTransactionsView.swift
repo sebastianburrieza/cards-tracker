@@ -19,7 +19,7 @@ struct NoTransactionsView: View {
                         .foregroundColor(Palette.grayMedium.swiftUI)
                         .frame(width: 40, height: 40, alignment: .center)
 
-                    Text("EMPTY_TRANSACTIONS_LIST_SELECTED_CARD")
+                    Text("NO_TRANSACTIONS".localized)
                         .font(Fonts.medium(size: 15))
                         .foregroundColor(Palette.grayMedium.swiftUI)
                 }
