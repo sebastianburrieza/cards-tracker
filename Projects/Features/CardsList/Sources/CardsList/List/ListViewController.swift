@@ -32,5 +32,7 @@ extension ListViewController: ListNavigationDelegate {
     func navigateToDetail(card: Card) {
         coordinator?.navigate(to: .detail(card: card), navigationType: .push(true))
     }
-    
+
+    func navigateToAddCard() { }
+
 }

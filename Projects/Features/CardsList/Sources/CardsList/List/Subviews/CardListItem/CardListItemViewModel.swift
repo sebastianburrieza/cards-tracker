@@ -32,7 +32,14 @@ final class CardListItemViewModel {
     }
 
     var progressColor: Color {
-        daysUntilDue <= 10 ? Palette.orange.swiftUI : Palette.green.swiftUI
+        switch progress {
+        case 0.9...1:
+            return Palette.red.swiftUI
+        case 0.6...0.89:
+            return Palette.orange.swiftUI
+        default:
+            return Palette.green.swiftUI
+        }
     }
 
     var dueDateLabel: String {
@@ -41,11 +48,26 @@ final class CardListItemViewModel {
             : "DUEDATE_PLURAL".localized(daysUntilDue)
     }
 
+    // MARK: - Card info
+
+    var bankName: String { card.bankName }
+
+    var typeLabel: String {
+        switch card.type {
+        case .creditPlastic, .creditVirtual: return "Crédito"
+        case .debitPlastic, .debitVirtual: return "Débito"
+        case .skeleton, .failure: return ""
+        }
+    }
+
+    var maskedLastFour: String {
+        card.lastFourDigits.isEmpty ? "" : "•••• \(card.lastFourDigits)"
+    }
+
     // MARK: - Accessibility
 
-    /// A single string VoiceOver reads aloud for the whole card row.
     var accessibilityLabel: String {
-        "\(card.holderName). Consumos: \(formattedAmountUsed). Disponible: \(formattedRemaining). \(dueDateLabel)."
+        "\(card.bankName). Consumos: \(formattedAmountUsed). Disponible: \(formattedRemaining). \(dueDateLabel)."
     }
 
     // MARK: - Private helpers

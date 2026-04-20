@@ -34,7 +34,7 @@ final class CardViewModel: ObservableObject {
     }
     
     var isVertical: Bool {
-        type != .debitVirtual && type != .debitPlastic
+        false
     }
     
     var visaAndContactlessColor: Color {
@@ -45,19 +45,6 @@ final class CardViewModel: ObservableObject {
             return Palette.grayMedium.swiftUI
         case (.failure, _):
             return Palette.grayMedium.swiftUI
-        default:
-            return .white
-        }
-    }
-    
-    var brubankLogoColor: Color {
-        switch (type, color) {
-        case (.creditPlastic, .PINK):
-            return colors.first?.adjust(saturation: 0.3).darkenColor(by: 0.7).opacity(0.3) ?? .white.opacity(0.9)
-        case (.creditPlastic, .GREEN):
-            return colors.first?.darkenColor(by: 0.7) ?? .white.opacity(0.3)
-        case (.creditPlastic, .PURPLE):
-            return colors.first?.darkenColor(by: 0.7) ?? .white.opacity(0.3)
         default:
             return .white
         }
@@ -77,7 +64,7 @@ final class CardViewModel: ObservableObject {
         
         switch color {
         case .VIOLET, .SKELETON:
-            return [Palette.violet.swiftUI.adjust(brightness: 0.3), Palette.violet.swiftUI]
+            return [Palette.blue.swiftUI.adjust(brightness: 0.3), Palette.blue.swiftUI]
         case .PINK:
             return [Palette.pink.swiftUI.adjust(brightness: 0.3), Palette.pink.swiftUI]
         case .GREEN:

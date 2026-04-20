@@ -4,18 +4,19 @@
 import SwiftUI
 import Factory
 import CoreModels
+import Extensions
 
 /// Handles navigation events triggered from the cards list screen.
 protocol ListNavigationDelegate: AnyObject {
-    /// Called when the user selects a card to view its detail.
     func navigateToDetail(card: Card)
+    func navigateToAddCard()
 }
 
 @Observable
 final class ListViewModel {
 
     var cards: [Card] = []
-    var isLoading = false
+    var isLoading = true
 
     var errorTitle: String?
     var errorMessage: String?
@@ -26,6 +27,30 @@ final class ListViewModel {
 
     @ObservationIgnored
     weak var delegate: ListNavigationDelegate?
+
+    // MARK: - Aggregates
+
+    var formattedTotalConsumed: String {
+        NumberFormatter.formatValue(totalConsumed, currency: .ARS, options: [.showCurrencySymbol])
+    }
+
+    var formattedTotalAvailable: String {
+        NumberFormatter.formatValue(totalAvailable, currency: .ARS, options: [.showCurrencySymbol, .maxFractionDigits(0)])
+    }
+
+    private var totalConsumed: Int {
+        cards.reduce(0) { $0 + max($1.limit - $1.available, 0) }
+    }
+
+    private var totalAvailable: Int {
+        cards.reduce(0) { $0 + $1.available }
+    }
+
+    // MARK: - Navigation
+
+    func navigateToAddCard() {
+        delegate?.navigateToAddCard()
+    }
 
     // MARK: - Data loading
 

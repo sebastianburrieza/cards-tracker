@@ -2,28 +2,34 @@
   {
     "id": "550e8400-e29b-41d4-a716-446655440000",
     "type": "creditPlastic",
-    "color": "GREEN",
+    "color": "BLUE",
     "holderName": "Sebastian A Burrieza",
+    "bankName": "Banco BBVA",
+    "lastFourDigits": "5678",
     "limit": 220000000,
     "available": 33250000,
     "closingDate": 1775347200,
-    "dueDate": 1775952000
+    "dueDate": 1777552000
   },
   {
     "id": "550e8400-e29b-41d4-a716-446655440001",
     "type": "creditPlastic",
-    "color": "PURPLE",
+    "color": "ORANGE",
     "holderName": "Sebastian A Burrieza",
+    "bankName": "Banco GALICIA",
+    "lastFourDigits": "1234",
     "limit": 200000000,
     "available": 183250000,
     "closingDate": 1775779200,
-    "dueDate": 1776384000
+    "dueDate": 1777584000
   },
   {
     "id": "550e8400-e29b-41d4-a716-446655440002",
     "type": "debitPlastic",
-    "color": "ORANGE",
+    "color": "PURPLE",
     "holderName": "Catalina Burrieza",
+    "bankName": "Banco Nación",
+    "lastFourDigits": "9012",
     "limit": 20000000,
     "available": 0,
     "closingDate": 1777507200,
