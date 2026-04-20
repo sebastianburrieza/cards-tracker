@@ -11,38 +11,53 @@ struct CardListItemView: View {
     @State var viewModel: CardListItemViewModel
 
     var body: some View {
-        HStack(spacing: 8) {
-            CardView(
-                type: viewModel.card.type,
-                color: viewModel.card.color,
-                hexa: viewModel.card.hexa,
-                size: 110,
-                isShadow: false
-            )
-
-            VStack(alignment: .leading, spacing: 8) {
-                amountRow
-                progressBar
-                dueDateLabel
-                holderName
+        VStack(alignment: .leading, spacing: 0) {
+            
+            HStack(alignment: .top, spacing: 6) {
+                cardView
+                    .padding(.top, 2)
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    amountRow
+                    progressBar
+                    dueDateLabel
+                }
+                .padding(.leading, 8)
             }
-            .padding(.leading, 8)
-
-            Spacer()
-
-            Image(systemName: "chevron.right")
-                .font(.system(size: 18, weight: .medium))
-                .foregroundColor(Palette.grayMedium.swiftUI)
-                .padding(.leading, -8)
+            
+            HStack(alignment: .center, spacing: 6) {
+                bottomInfoRow
+                    .padding(.top, 4)
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .font(Fonts.medium(size: 18))
+                    .foregroundColor(Palette.grayMedium.swiftUI)
+                    .padding(.top, 8)
+            }
         }
-        .padding(8)
-        .background(Material.regular)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .padding(12)
+        .background(Palette.backgroundLight.swiftUI)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: Palette.staticBlack.swiftUI.opacity(0.1), radius: 8, x: 0, y: 2)
-        // Accessibility: merge all child elements into one VoiceOver item
         .accessibilityElement(children: .combine)
         .accessibilityLabel(viewModel.accessibilityLabel)
-        .accessibilityHint("Double-tap to open card detail")
+        .accessibilityHint("Doble tap para abrir el detalle de la tarjeta")
+    }
+
+    // MARK: Card thumbnail
+
+    @ViewBuilder
+    private var cardView: some View {
+        CardView(
+            type: viewModel.card.type,
+            color: viewModel.card.color,
+            hexa: viewModel.card.hexa,
+            size: 110,
+            isShadow: false
+        )
+        .frame(width: 110, height: 70)
     }
 
     // MARK: Amount row
@@ -51,13 +66,13 @@ struct CardListItemView: View {
     private var amountRow: some View {
         HStack(alignment: .firstTextBaseline, spacing: 6) {
             Text(viewModel.formattedAmountUsed)
-                .font(Fonts.bold(size: 20))
+                .font(Fonts.bold(size: 18))
                 .foregroundColor(Palette.grayUltraDark.swiftUI)
-            
+
             Spacer()
 
             Text(viewModel.formattedRemaining)
-                .font(Fonts.regular(size: 13))
+                .font(Fonts.regular(size: 10))
                 .foregroundColor(Palette.grayMedium.swiftUI)
         }
     }
@@ -70,14 +85,14 @@ struct CardListItemView: View {
             ZStack(alignment: .leading) {
                 RoundedRectangle(cornerRadius: 8)
                     .fill(Palette.grayUltraLight.swiftUI)
-                    .frame(height: 16)
+                    .frame(height: 10)
 
                 RoundedRectangle(cornerRadius: 8)
                     .fill(viewModel.progressColor)
-                    .frame(width: geo.size.width * viewModel.progress, height: 16)
+                    .frame(width: geo.size.width * viewModel.progress, height: 10)
             }
         }
-        .frame(height: 12)
+        .frame(height: 10)
     }
 
     // MARK: Due date
@@ -85,16 +100,26 @@ struct CardListItemView: View {
     @ViewBuilder
     private var dueDateLabel: some View {
         Text(viewModel.dueDateLabel)
-            .font(Fonts.regular(size: 12))
+            .font(Fonts.thin(size: 14))
             .foregroundColor(Palette.grayMedium.swiftUI)
     }
 
-    // MARK: Holder name
+    // MARK: Bottom info row
 
     @ViewBuilder
-    private var holderName: some View {
-        Text(viewModel.card.holderName)
-            .font(Fonts.medium(size: 18))
-            .foregroundColor(Palette.grayUltraDark.swiftUI)
+    private var bottomInfoRow: some View {
+        HStack(spacing: 6) {
+            Text(viewModel.card.bankName)
+                .font(Fonts.medium(size: 20))
+                .foregroundColor(Palette.grayUltraDark.swiftUI)
+
+            Text(viewModel.typeLabel)
+                .font(Fonts.regular(size: 17))
+                .foregroundColor(Palette.grayDark.swiftUI)
+
+            Text(viewModel.maskedLastFour)
+                .font(Fonts.regular(size: 17))
+                .foregroundColor(Palette.grayUltraDark.swiftUI)
+        }
     }
 }

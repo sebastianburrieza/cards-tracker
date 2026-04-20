@@ -14,6 +14,8 @@ public struct Card: Identifiable, Hashable, Codable {
     public let hexa: String?
 
     public let holderName: String
+    public let bankName: String
+    public let lastFourDigits: String
 
     public let limit: Int
     public let available: Int
@@ -30,6 +32,8 @@ public struct Card: Identifiable, Hashable, Codable {
                 color: ColorCode,
                 hexa: String?,
                 holderName: String,
+                bankName: String = "",
+                lastFourDigits: String = "",
                 limit: Int,
                 available: Int,
                 closingDate: Date,
@@ -40,6 +44,8 @@ public struct Card: Identifiable, Hashable, Codable {
         self.color = color
         self.hexa = hexa
         self.holderName = holderName
+        self.bankName = bankName
+        self.lastFourDigits = lastFourDigits
         self.limit = limit
         self.available = available
         self.closingDate = closingDate
@@ -54,14 +60,16 @@ public struct Card: Identifiable, Hashable, Codable {
     /// this is the Swift equivalent of Kotlin's `data class copy(isPaused = ...)`.
     public func copy(isPaused: Bool) -> Card {
         Card(id: id, type: type, color: color, hexa: hexa,
-             holderName: holderName, limit: limit, available: available,
+             holderName: holderName, bankName: bankName, lastFourDigits: lastFourDigits,
+             limit: limit, available: available,
              closingDate: closingDate, dueDate: dueDate, isPaused: isPaused)
     }
 
     // MARK: - Codable
 
     enum CodingKeys: String, CodingKey {
-        case id, type, color, hexa, holderName, limit, available, closingDate, dueDate, isPaused
+        case id, type, color, hexa, holderName, bankName, lastFourDigits
+        case limit, available, closingDate, dueDate, isPaused
     }
 
     public init(from decoder: Decoder) throws {
@@ -71,6 +79,8 @@ public struct Card: Identifiable, Hashable, Codable {
         color = try container.decode(ColorCode.self, forKey: .color)
         hexa = try container.decodeIfPresent(String.self, forKey: .hexa)
         holderName = try container.decode(String.self, forKey: .holderName)
+        bankName = try container.decodeIfPresent(String.self, forKey: .bankName) ?? ""
+        lastFourDigits = try container.decodeIfPresent(String.self, forKey: .lastFourDigits) ?? ""
         limit = try container.decode(Int.self, forKey: .limit)
         available = try container.decode(Int.self, forKey: .available)
         closingDate = try container.decode(Date.self, forKey: .closingDate)

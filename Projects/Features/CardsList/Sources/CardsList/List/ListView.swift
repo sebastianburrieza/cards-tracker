@@ -14,7 +14,7 @@ struct ListView: View {
 
     var body: some View {
         ZStack {
-            background
+            Palette.backgroundMedium.swiftUI
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
@@ -22,8 +22,11 @@ struct ListView: View {
             }
         }
         .safeAreaInset(edge: .top) {
-            navigationBarView
-                .background(Material.ultraThin)
+            headerView
+                .background(Palette.primary.swiftUI
+                    .ignoresSafeArea(edges: .top)
+                    .shadow(color: Palette.staticBlack.swiftUI.opacity(0.3), radius: 8, x: 0, y: 3)
+                )
         }
         .task { await viewModel.fetchCards() }
         .toastErrorView(title: viewModel.errorTitle ?? "",
@@ -32,32 +35,66 @@ struct ListView: View {
                         isPresented: $viewModel.isError)
     }
 
-    // MARK: Background
+    // MARK: Header
 
     @ViewBuilder
-    private var background: some View {
-        LinearGradient(
-            colors: [
-                Palette.primary.swiftUI.opacity(0.4),
-                Palette.orange.swiftUI.opacity(0.2)
-            ],
-            startPoint: .top,
-            endPoint: .bottom
-        )
+    private var headerView: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            titleRow
+            summaryCard
+        }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 16)
     }
 
-    // MARK: NavigationBar
+    @ViewBuilder
+    private var titleRow: some View {
+        HStack {
+            Text("CARDLIST_TITLE".localized)
+                .font(Fonts.bold(size: 32))
+                .foregroundColor(Palette.backgroundLight.swiftUI)
+
+            Spacer()
+
+            Button(action: { viewModel.navigateToAddCard()
+            }, label: {
+                Image(systemName: "plus")
+                    .font(Fonts.bold(size: 20))
+                    .foregroundColor(Palette.backgroundLight.swiftUI)
+                    .padding(8)
+                    .background(
+                        Circle()
+                            .stroke(Palette.backgroundLight.swiftUI.opacity(0.5), lineWidth: 1.5)
+                    )
+            })
+        }
+    }
 
     @ViewBuilder
-    private var navigationBarView: some View {
-        VStack {
-            NavigationBarView(
-                middleView: AnyView(
-                    Text("CARDLIST_TITLE".localized)
-                        .font(Fonts.medium(size: 21))
-                )
-            )
+    private var summaryCard: some View {
+        VStack(spacing: 4) {
+            Text("CARDLIST_TOTAL_CONSUMED".localized)
+                .font(Fonts.regular(size: 18))
+                .foregroundColor(Palette.backgroundLight.swiftUI.opacity(0.7))
+
+            Text(viewModel.formattedTotalConsumed)
+                .font(Fonts.bold(size: 32))
+                .foregroundColor(Palette.backgroundLight.swiftUI)
+
+            (Text("CARDLIST_AVAILABLE".localized + " ")
+                .font(Fonts.regular(size: 18))
+                .foregroundColor(Palette.backgroundLight.swiftUI.opacity(0.7))
+            + Text(viewModel.formattedTotalAvailable)
+                .font(Fonts.medium(size: 18))
+                .foregroundColor(Palette.backgroundLight.swiftUI))
         }
+        .frame(maxWidth: .infinity)
+        .isSkeletonView(viewModel.isLoading)
+        .padding(.vertical, 16)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Palette.backgroundLight.swiftUI.opacity(0.1))
+        )
     }
 
     // MARK: Card list
@@ -65,17 +102,17 @@ struct ListView: View {
     @ViewBuilder
     private var cardList: some View {
         ScrollView(showsIndicators: false) {
-            // LazyVStack renders only the rows currently visible on screen.
-            // Unlike VStack, it does NOT build all cards at once — same idea as UITableView cell reuse.
             LazyVStack(spacing: 16) {
                 ForEach(viewModel.cards) { card in
                     CardListItemView(viewModel: .init(card: card))
+                        .isSkeletonView(viewModel.isLoading)
                         .onTapGesture {
                             viewModel.delegate?.navigateToDetail(card: card)
                         }
                 }
             }
             .padding(.horizontal, 16)
+            .padding(.vertical, 8)
         }
     }
 }

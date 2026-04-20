@@ -58,14 +58,15 @@ struct CardView: View {
         LinearGradient(gradient: Gradient(colors: viewModel.colors), startPoint: .topLeading, endPoint: .bottomTrailing)
             .frame(width: viewModel.isVertical ? height * 0.63 : height,
                    height: viewModel.isVertical ? height : height * 0.63)
-            .clipShape(RoundedRectangle(cornerRadius: height * 0.04))
+            .clipShape(RoundedRectangle(cornerRadius: height * 0.1))
             .grayscale(isPaused ? 0.2 : 0)
     }
     
     @ViewBuilder
     private var strokeCard: some View {
         RoundedRectangle(cornerRadius: height * 0.04)
-            .stroke(viewModel.type == .failure ? Palette.grayMedium.swiftUI : Palette.primary.swiftUI, style: StrokeStyle(lineWidth: 2, dash: [8, 8]))
+            .stroke(viewModel.type == .failure ? Palette.grayMedium.swiftUI :
+                        Palette.primary.swiftUI, style: StrokeStyle(lineWidth: 2, dash: [8, 8]))
             .frame(width: viewModel.isVertical ? height * 0.63 : height,
                    height: viewModel.isVertical ? height : height * 0.63)
     }
@@ -88,7 +89,7 @@ struct CardView: View {
             .isHidden(viewModel.shouldShowVirtualLabel)
             .blur(radius: isPaused ? 0.5 : 0)
                 
-            visa
+            brand
                 .offset(x: height * 0.11, y: height * 0.37)
                 .blur(radius: isPaused ? 0.5 : 0)
         }
@@ -107,13 +108,13 @@ struct CardView: View {
                     .offset(x: -height * 0.37, y: -height * 0.02)
                 
                 contacless
-                    .offset(x: height * 0.38, y: -height * 0.17)
+                    .offset(x: -height * 0.38, y: -height * 0.17)
             }
             .isHidden(viewModel.shouldShowVirtualLabel)
             .blur(radius: isPaused ? 2 : 0)
                 
-            visa
-                .offset(x: height * 0.27, y: height * 0.19)
+            brand
+                .offset(x: height * 0.27, y: height * 0.08)
                 .blur(radius: isPaused ? 2 : 0)
             
             if let lastFour, !isPaused {
@@ -135,15 +136,15 @@ struct CardView: View {
     }
     
     @ViewBuilder
-    private var visa: some View {
-        let width = height * 0.3
-        let height = height * 0.1
-        Image("visa")
-            .renderingMode(.template)
+    private var brand: some View {
+        let width = height * 0.4
+        let height = height * 0.4
+        Image(["visa", "mastercard"].randomElement() ?? "visa")
+            .renderingMode(.original)
             .resizable()
             .aspectRatio(contentMode: .fit)
-            .foregroundColor(.white)
-            .frame(width: width, height: height)
+            .foregroundColor(.clear)
+            .frame(width: width, height: height, alignment: .bottom)
     }
     
     @ViewBuilder
@@ -200,12 +201,4 @@ struct CardView: View {
             .offset(x: -height * 0.23, y: height * 0.2)
     }
     
-}
-
-struct CardView_Previews: PreviewProvider {
-    static var previews: some View {
-        ZStack {
-            CardView(type: .creditPlastic, color: .PURPLE, hexa: nil, size: 400)
-        }
-    }
 }
