@@ -29,7 +29,7 @@ struct TransactionDetailView: View {
                     Spacer()
 
                     dataContent
-                        .background(Material.thin)
+                        .background(Palette.backgroundLight.swiftUI)
                         .clipShape(RoundedRectangle(cornerRadius: 40, style: .continuous))
                         .shadow(color: .black.opacity(0.1), radius: 6, x: 0, y: 4)
                         .padding(.horizontal, 10)

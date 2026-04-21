@@ -52,6 +52,7 @@ struct CardListItemView: View {
     private var cardView: some View {
         CardView(
             type: viewModel.card.type,
+            brand: viewModel.card.brand,
             color: viewModel.card.color,
             hexa: viewModel.card.hexa,
             size: 110,

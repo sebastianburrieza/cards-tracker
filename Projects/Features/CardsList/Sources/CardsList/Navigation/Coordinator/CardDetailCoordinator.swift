@@ -12,6 +12,7 @@ final class CardDetailCoordinator: CoordinatorProtocol {
 
     enum Steps {
         case detail
+        case settings
     }
     
     var childCoordinators = [any CoordinatorProtocol]()
@@ -36,7 +37,17 @@ final class CardDetailCoordinator: CoordinatorProtocol {
             let controller = CardDetailViewController(viewModel: viewModel)
             controller.coordinator = self
             return controller
+        case .settings:
+            let viewModel = CardSettingsViewModel(card: card)
+            let controller = CardSettingsViewController(viewModel: viewModel)
+            controller.coordinator = self
+            return controller
         }
     }
-    
+
+    func navigateToSettings() {
+        let controller = buildController(for: .settings)
+        navigationController.pushViewController(controller, animated: true)
+    }
+
 }

@@ -26,6 +26,14 @@ final class CardDetailViewController: UIHostingController<CardDetailView> {
         view.backgroundColor = .clear
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        Task {
+            await viewModel.fetchTransactions()
+        }
+    }
+    
 }
 
 extension CardDetailViewController: CardDetailNavigationDelegate {
@@ -45,5 +53,8 @@ extension CardDetailViewController: CardDetailNavigationDelegate {
         }
     }
 
-}
+    func navigateToSettings() {
+        coordinator?.navigateToSettings()
+    }
 
+}

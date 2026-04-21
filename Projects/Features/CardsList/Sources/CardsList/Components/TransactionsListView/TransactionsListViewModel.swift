@@ -17,7 +17,22 @@ final class TransactionsListViewModel {
     var isFetching: Bool = false
     
     var viewState: TransactionsDataState = .hasData(TransactionItemViewModel.placeHolder)
+    var activeFilter: TransactionFilter = .all
     private var listDataSource = TransactionsDataSource()
+
+    var filteredViewState: TransactionsDataState {
+        guard case .hasData(let items) = viewState else { return viewState }
+        let filtered: [TransactionItemViewModel]
+        switch activeFilter {
+        case .all:
+            filtered = items
+        case .installments:
+            filtered = items.filter { $0.transaction.installment != nil }
+        case .dollars:
+            filtered = items.filter { $0.transaction.currency == .USD }
+        }
+        return filtered.isEmpty ? .noData : .hasData(filtered)
+    }
     
     var cardId: String?
     

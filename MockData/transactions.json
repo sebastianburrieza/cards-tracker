@@ -36,6 +36,99 @@
     "category": "restaurant"
   },
   {
+    "id": "660e8400-e29b-41d4-a716-446655440014",
+    "merchantName": "Samsung Store",
+    "date": 1773446400,
+    "amount": 89990000,
+    "currency": "ARS",
+    "installment": 1,
+    "totalInstallments": 12,
+    "totalInstallmentsAmount": 1079880000,
+    "cardId": "550e8400-e29b-41d4-a716-446655440000",
+    "category": "shopping"
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440015",
+    "merchantName": "Aerolíneas Argentinas",
+    "date": 1773360000,
+    "amount": 42500000,
+    "currency": "ARS",
+    "installment": 3,
+    "totalInstallments": 6,
+    "totalInstallmentsAmount": 255000000,
+    "cardId": "550e8400-e29b-41d4-a716-446655440000",
+    "category": "other"
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440016",
+    "merchantName": "Fravega",
+    "date": 1773273600,
+    "amount": 15200000,
+    "currency": "ARS",
+    "installment": 2,
+    "totalInstallments": 3,
+    "totalInstallmentsAmount": 45600000,
+    "cardId": "550e8400-e29b-41d4-a716-446655440000",
+    "category": "shopping"
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440017",
+    "merchantName": "Netflix",
+    "date": 1773187200,
+    "amount": 1490,
+    "currency": "USD",
+    "cardId": "550e8400-e29b-41d4-a716-446655440000",
+    "category": "streaming"
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440018",
+    "merchantName": "Amazon",
+    "date": 1773014400,
+    "amount": 3499,
+    "currency": "USD",
+    "cardId": "550e8400-e29b-41d4-a716-446655440000",
+    "category": "shopping"
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440019",
+    "merchantName": "Spotify",
+    "date": 1772928000,
+    "amount": 699,
+    "currency": "USD",
+    "cardId": "550e8400-e29b-41d4-a716-446655440000",
+    "category": "streaming"
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-44665544001a",
+    "merchantName": "Apple iCloud",
+    "date": 1772841600,
+    "amount": 299,
+    "currency": "USD",
+    "cardId": "550e8400-e29b-41d4-a716-446655440000",
+    "category": "other"
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-44665544001b",
+    "merchantName": "Garbarino",
+    "date": 1772755200,
+    "amount": 31400000,
+    "currency": "ARS",
+    "installment": 1,
+    "totalInstallments": 18,
+    "totalInstallmentsAmount": 565200000,
+    "cardId": "550e8400-e29b-41d4-a716-446655440000",
+    "category": "shopping"
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-44665544001c",
+    "merchantName": "Uber Eats",
+    "date": 1772668800,
+    "amount": 2140000,
+    "currency": "ARS",
+    "cardId": "550e8400-e29b-41d4-a716-446655440000",
+    "category": "delivery"
+  },
+  {
     "id": "660e8400-e29b-41d4-a716-446655440020",
     "merchantName": "Mercado Libre",
     "date": 1773532800,

@@ -23,6 +23,13 @@ final class ListViewController: UIHostingController<ListView> {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
+        fetch()
+    }
+    
+    private func fetch() {
+        Task {
+            await viewModel.fetchCards()
+        }
     }
     
 }

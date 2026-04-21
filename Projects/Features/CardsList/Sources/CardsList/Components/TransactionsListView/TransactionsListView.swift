@@ -15,7 +15,7 @@ struct TransactionsListView: View {
     var body: some View {
         
         VStack {
-            switch viewModel.viewState {
+            switch viewModel.filteredViewState {
             case .failure:
                 FailureTransactionsView()
                 

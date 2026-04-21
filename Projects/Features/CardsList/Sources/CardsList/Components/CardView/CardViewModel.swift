@@ -53,7 +53,7 @@ final class CardViewModel: ObservableObject {
     var colors: [Color] {
         if let hex = hexa, !hex.isEmpty {
             switch color {
-            case .VIOLET, .PINK, .GREEN, .ORANGE:
+            case .VIOLET, .PINK, .GREEN, .ORANGE, .BLUE:
                 return [Color(hex: "\(hex)").adjust(brightness: 0.2), Color(hex: "\(hex)")]
             case .PURPLE:
                 return [Color(hex: "\(hex)").adjust(brightness: 0.5), Color(hex: "\(hex)")]
@@ -63,7 +63,7 @@ final class CardViewModel: ObservableObject {
         }
         
         switch color {
-        case .VIOLET, .SKELETON:
+        case .VIOLET, .SKELETON, .BLUE:
             return [Palette.blue.swiftUI.adjust(brightness: 0.3), Palette.blue.swiftUI]
         case .PINK:
             return [Palette.pink.swiftUI.adjust(brightness: 0.3), Palette.pink.swiftUI]

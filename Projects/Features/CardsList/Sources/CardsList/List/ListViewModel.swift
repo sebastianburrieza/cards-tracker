@@ -15,7 +15,7 @@ protocol ListNavigationDelegate: AnyObject {
 @Observable
 final class ListViewModel {
 
-    var cards: [Card] = []
+    var cards: [Card] = Array(repeating: Card.skeleton(), count: 3)
     var isLoading = true
 
     var errorTitle: String?
