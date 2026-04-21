@@ -18,6 +18,7 @@ final class CardSettingsViewModel {
 
     var isPaused: Bool
     var isSubmitting: Bool = false
+    var showPopup: Bool = false
 
     var errorTitle: String?
     var errorMessage: String?
@@ -38,8 +39,11 @@ final class CardSettingsViewModel {
 
     func pauseCard() async {
         await MainActor.run {
-            isPaused.toggle()
-            isSubmitting = true
+            withAnimation(.smooth(duration: 0.4, extraBounce: 0.2)) {
+                isPaused.toggle()
+                isSubmitting = true
+                showPopup = true
+            }
         }
 
         let updatedCard = card.copy(isPaused: isPaused)
@@ -70,7 +74,11 @@ final class CardSettingsViewModel {
     // MARK: - Formatted values
 
     var activeBadgeLabel: String {
-        isPaused ? "PAUSED".localized : "SETTINGS_ACTIVE_BADGE".localized
+        isPaused ? "PAUSED".localized : "ACTIVE".localized
+    }
+    
+    var popupText: String {
+        isPaused ? "SETTINGS_ACTIVED".localized : "SETTINGS_PAUSED".localized
     }
 
     var formattedLastFourDigits: String {

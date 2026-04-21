@@ -4,6 +4,7 @@
 import SwiftUI
 import Factory
 import CoreModels
+import ResourcesUI
 import Extensions
 
 /// Handles navigation events triggered from the cards list screen.
@@ -15,7 +16,11 @@ protocol ListNavigationDelegate: AnyObject {
 @Observable
 final class ListViewModel {
 
-    var cards: [Card] = Array(repeating: Card.skeleton(), count: 3)
+    var cards: [Card] = [Card.skeleton(), Card.skeleton(), Card.skeleton()]
+    var totalConsumed: Int = 0
+    var totalAvailable: Int = 0
+    var fontColor: Color = Palette.white.swiftUI
+    
     var isLoading = true
 
     var errorTitle: String?
@@ -27,24 +32,6 @@ final class ListViewModel {
 
     @ObservationIgnored
     weak var delegate: ListNavigationDelegate?
-
-    // MARK: - Aggregates
-
-    var formattedTotalConsumed: String {
-        NumberFormatter.formatValue(totalConsumed, currency: .ARS, options: [.showCurrencySymbol])
-    }
-
-    var formattedTotalAvailable: String {
-        NumberFormatter.formatValue(totalAvailable, currency: .ARS, options: [.showCurrencySymbol, .maxFractionDigits(0)])
-    }
-
-    private var totalConsumed: Int {
-        cards.reduce(0) { $0 + max($1.limit - $1.available, 0) }
-    }
-
-    private var totalAvailable: Int {
-        cards.reduce(0) { $0 + $1.available }
-    }
 
     // MARK: - Navigation
 
@@ -61,13 +48,19 @@ final class ListViewModel {
         let result = await repository.fetchCards()
 
         await MainActor.run {
+            isLoading = false
             switch result {
             case .success(let cards):
                 self.cards = cards
+                let consumed = cards.reduce(0) { $0 + max($1.limit - $1.available, 0) }
+                let available = cards.reduce(0) { $0 + $1.available }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                    self?.totalConsumed = consumed
+                    self?.totalAvailable = available
+                }
             case .failure(let error):
                 showError(error)
             }
-            isLoading = false
         }
     }
 

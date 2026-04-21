@@ -2,6 +2,7 @@
 //  Created by Sebastian Burrieza on 01/04/2026.
 
 import SwiftUI
+import ResourcesUI
 import Extensions
 import CoreModels
 
@@ -38,6 +39,10 @@ final class CardDetailViewModel {
     var errorTitle: String?
     var errorMessage: String?
     var isError: Bool = false
+    
+    var amountConsumed: Int = 0
+    var amountAvailable: Int = 0
+    var fontColor: Color = Palette.white.swiftUI
 
     // MARK: - Not observed
 
@@ -48,6 +53,9 @@ final class CardDetailViewModel {
 
     init(card: Card) {
         self.card = card
+        
+        amountConsumed = card.limit - card.available
+        amountAvailable = card.available
     }
 
     // MARK: - Navigation
@@ -65,12 +73,7 @@ final class CardDetailViewModel {
     }
 
     // MARK: - Formatted values
-
-    var formattedAmountUsed: String {
-        let used = card.limit - card.available
-        return NumberFormatter.formatValue(used, currency: .ARS, options: [.showCurrencySymbol])
-    }
-
+    
     var formattedAvailable: String {
         NumberFormatter.formatValue(
             card.available,

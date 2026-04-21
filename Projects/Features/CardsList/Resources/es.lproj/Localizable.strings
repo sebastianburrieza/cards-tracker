@@ -18,11 +18,12 @@
 
 /* Card Settings */
 "SETTINGS_TITLE" = "Ajustes";
-"SETTINGS_ACTIVE_BADGE" = "Activa";
 "SETTINGS_PAUSE_TITLE" = "Pausar tarjeta";
 "SETTINGS_PAUSE_SUBTITLE" = "Se bloquean nuevos consumos. Podés reactivarla cuando quieras.";
 "SETTINGS_REPORT_TITLE" = "Reportar robo o pérdida";
 "SETTINGS_REPORT_SUBTITLE" = "Se bloquean toda la tarjeta inmediatamente y se envía una nueva.";
+"SETTINGS_PAUSED" = "Tarjeta Pausada";
+"SETTINGS_ACTIVED" = "Tarjeta activada";
 
 /* Errors */
 "ERROR_TITLE_GENERIC" = "Algo salió mal";
@@ -33,6 +34,7 @@
 /* COMPONENTS */
 /* CardView */
 
+"ACTIVE" = "Activa";
 "PAUSED" = "Pausada";
 "VIRTUAL" = "Virtual";
 "CREDIT" = "Crédito";

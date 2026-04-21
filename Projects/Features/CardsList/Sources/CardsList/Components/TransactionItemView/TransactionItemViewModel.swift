@@ -15,9 +15,14 @@ final class TransactionItemViewModel: Equatable, Identifiable {
     init(transaction: CoreModels.Transaction) {
         self.transaction = transaction
     }
+    
+    var colorAmount: Color {
+        transaction.currency == .ARS ? Palette.grayUltraDark.swiftUI : Palette.green.swiftUI
+    }
 
     var formattedAmount: String {
-        NumberFormatter.formatValue(transaction.amount, currency: .ARS, options: [.showCurrencySymbol])
+        let currency = transaction.currency
+        return NumberFormatter.formatValue(transaction.amount, currency: currency, options: [.showCurrencySymbol])
     }
 
     var formattedDate: String {

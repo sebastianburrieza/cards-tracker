@@ -21,6 +21,9 @@ struct ListView: View {
                 cardList
             }
         }
+        .refreshable {
+            await viewModel.fetchCards()
+        }
         .safeAreaInset(edge: .top) {
             headerView
                 .background(Palette.primary.swiftUI
@@ -76,16 +79,21 @@ struct ListView: View {
                 .font(Fonts.regular(size: 18))
                 .foregroundColor(Palette.backgroundLight.swiftUI.opacity(0.7))
 
-            Text(viewModel.formattedTotalConsumed)
-                .font(Fonts.bold(size: 32))
-                .foregroundColor(Palette.backgroundLight.swiftUI)
+            BouncingAmount(value: $viewModel.totalConsumed,
+                           font: Fonts.bold(size: 32),
+                           fontColor: $viewModel.fontColor,
+                           currency: Currency.ARS)
 
-            (Text("CARDLIST_AVAILABLE".localized + " ")
-                .font(Fonts.regular(size: 18))
-                .foregroundColor(Palette.backgroundLight.swiftUI.opacity(0.7))
-            + Text(viewModel.formattedTotalAvailable)
-                .font(Fonts.medium(size: 18))
-                .foregroundColor(Palette.backgroundLight.swiftUI))
+            HStack {
+                Text("CARDLIST_AVAILABLE".localized + " ")
+                    .font(Fonts.regular(size: 18))
+                    .foregroundColor(Palette.backgroundLight.swiftUI.opacity(0.7))
+                
+                BouncingAmount(value: $viewModel.totalAvailable,
+                               font: Fonts.medium(size: 18),
+                               fontColor: $viewModel.fontColor,
+                               currency: Currency.ARS)
+            }
         }
         .frame(maxWidth: .infinity)
         .isSkeletonView(viewModel.isLoading)
@@ -102,7 +110,7 @@ struct ListView: View {
     private var cardList: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack(spacing: 16) {
-                ForEach(viewModel.cards) { card in
+                ForEachAnimation(viewModel.cards) { card in
                     CardListItemView(viewModel: .init(card: card))
                         .isSkeletonView(viewModel.isLoading)
                         .onTapGesture {
