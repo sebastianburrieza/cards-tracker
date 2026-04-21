@@ -63,8 +63,10 @@ final class CardViewModel: ObservableObject {
         }
         
         switch color {
-        case .VIOLET, .SKELETON, .BLUE:
+        case .BLUE:
             return [Palette.blue.swiftUI.adjust(brightness: 0.3), Palette.blue.swiftUI]
+        case .VIOLET:
+            return [Palette.violet.swiftUI.adjust(brightness: 0.3), Palette.violet.swiftUI]
         case .PINK:
             return [Palette.pink.swiftUI.adjust(brightness: 0.3), Palette.pink.swiftUI]
         case .GREEN:
@@ -73,8 +75,8 @@ final class CardViewModel: ObservableObject {
             return [Palette.purple.swiftUI.adjust(brightness: 0.3), Palette.purple.swiftUI]
         case .ORANGE:
             return [Palette.orange.swiftUI.adjust(brightness: 0.3), Palette.orange.swiftUI]
-        case .WHITE:
-            return [Color(hex: "#CA2DB6"), Color(hex: "#6049D9")]
+        case .SKELETON, .WHITE:
+            return [Palette.primary.swiftUI.adjust(brightness: 0.3), Palette.primary.swiftUI]
         }
     }
     

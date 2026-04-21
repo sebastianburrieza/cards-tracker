@@ -3,6 +3,7 @@
 
 import SwiftUI
 import CoreModels
+import ComponentsUI
 import ResourcesUI
 import Utilities
 
@@ -31,9 +32,10 @@ struct TransactionItemView: View {
             
             Spacer()
             
-            Text(viewModel.formattedAmount)
-                .font(Fonts.medium(size: 15))
-                .foregroundColor(Palette.grayUltraDark.swiftUI)
+            AmountText(value: viewModel.transaction.amount,
+                       hasSign: false,
+                       currency: viewModel.transaction.currency,
+                       font: Fonts.medium(size: 15))
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)

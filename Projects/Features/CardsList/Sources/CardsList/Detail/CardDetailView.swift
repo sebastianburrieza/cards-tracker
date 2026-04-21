@@ -27,6 +27,9 @@ struct CardDetailView: View {
                 }
             }
         }
+        .refreshable {
+            await viewModel.fetchTransactions()
+        }
         .safeAreaInset(edge: .top) {
             headerView
         }
@@ -98,17 +101,22 @@ struct CardDetailView: View {
             Text("DETAIL_TITLE".localized)
                 .font(Fonts.regular(size: 18))
                 .foregroundColor(Palette.backgroundLight.swiftUI.opacity(0.7))
+            
+            BouncingAmount(value: $viewModel.amountConsumed,
+                           font: Fonts.bold(size: 32),
+                           fontColor: $viewModel.fontColor,
+                           currency: Currency.ARS)
 
-            Text(viewModel.formattedAmountUsed)
-                .font(Fonts.bold(size: 32))
-                .foregroundColor(Palette.backgroundLight.swiftUI)
-
-            (Text("CARDLIST_AVAILABLE".localized + " ")
-                .font(Fonts.regular(size: 18))
-                .foregroundColor(Palette.backgroundLight.swiftUI.opacity(0.7))
-            + Text(viewModel.formattedAvailable)
-                .font(Fonts.medium(size: 18))
-                .foregroundColor(Palette.backgroundLight.swiftUI))
+            HStack {
+                Text("CARDLIST_AVAILABLE".localized + " ")
+                    .font(Fonts.regular(size: 18))
+                    .foregroundColor(Palette.backgroundLight.swiftUI.opacity(0.7))
+                
+                BouncingAmount(value: $viewModel.amountAvailable,
+                               font: Fonts.bold(size: 18),
+                               fontColor: $viewModel.fontColor,
+                               currency: Currency.ARS)
+            }
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)

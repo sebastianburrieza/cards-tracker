@@ -1,5 +1,5 @@
 //  ToastErrorView.swift
-//  Created by Sebastian Burrieza on 09/09/2025.
+//  Created by Sebastian Burrieza on 01/04/2026.
 
 import SwiftUI
 import ResourcesUI

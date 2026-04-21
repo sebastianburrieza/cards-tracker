@@ -3,12 +3,13 @@
 
 import Foundation
 import SwiftUI
+import ResourcesUI
 import Utilities
 import CoreModels
 
-extension NumberFormatter {
+public extension NumberFormatter {
 
-    public enum FormatterOption {
+    enum FormatterOption {
         case minFractionDigits(_ value: Int)
         case maxFractionDigits(_ value: Int)
         case roundingMode(_ mode: NumberFormatter.RoundingMode)
@@ -17,32 +18,32 @@ extension NumberFormatter {
         case completeDecimals
     }
 
-    public static func formatNumber(_ value: Int, options: [FormatterOption] = [], locale: Locale = Locale.current) -> String {
+    static func formatNumber(_ value: Int, options: [FormatterOption] = [], locale: Locale = Locale.current) -> String {
         let amount = convertToAmount(value)
         return formatValue(amount, options: options, locale: locale)
     }
 
-    public static func convertToAmount(_ value: Int) -> Double {
+    static func convertToAmount(_ value: Int) -> Double {
         let conversion = String(format: "%.2f", Double(value) / 100.0)
         return (conversion as NSString).doubleValue
     }
 
-    public static var customCurrencyGroupingSeparator: String {
+    static var customCurrencyGroupingSeparator: String {
         let formatter = NumberFormatter()
         formatter.locale = Locale.current
         return formatter.currencyGroupingSeparator
     }
 
-    public static var customCurrencyDecimalSeparator: String {
+    static var customCurrencyDecimalSeparator: String {
         let formatter = NumberFormatter()
         formatter.locale = Locale.current
         return formatter.currencyDecimalSeparator
     }
 
-    public static func formatValue(_ value: Double,
-                                   currency: Currency? = nil,
-                                   options: [FormatterOption] = [],
-                                   locale: Locale = Locale.current) -> String {
+    static func formatValue(_ value: Double,
+                            currency: Currency? = nil,
+                            options: [FormatterOption] = [],
+                            locale: Locale = Locale.current) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.locale = locale
@@ -94,19 +95,85 @@ extension NumberFormatter {
         }
     }
 
-    public static func formatValue(_ value: Int,
-                                   currency: Currency? = nil,
-                                   options: [FormatterOption] = [],
-                                   locale: Locale = Locale.current) -> String {
+    static func formatValue(_ value: Int,
+                            currency: Currency? = nil,
+                            options: [FormatterOption] = [],
+                            locale: Locale = Locale.current) -> String {
         let amount = convertToAmount(value)
         return formatValue(amount, currency: currency, options: options, locale: locale)
     }
 
-    public static var nonBreakableSpace: String { "\u{202F}" }
+    static var nonBreakableSpace: String { "\u{202F}" }
 
-    public func format(from value: Double) -> String {
+    func format(from value: Double) -> String {
         string(from: value as NSNumber)?
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .replacingOccurrences(of: "[\\s\n]+", with: Self.nonBreakableSpace, options: .regularExpression, range: nil) ?? "-"
+    }
+    
+    static func formatAmount(_ amount: Int,
+                             positiveColor: Color = Palette.green.swiftUI,
+                             negativeColor: Color = Palette.black.swiftUI,
+                             decimalAlpha: CGFloat = 0.5,
+                             hasSign: Bool = false,
+                             currency: Currency? = nil) -> AttributedString {
+        
+        var attributed = AttributedString()
+        
+        let valueToBeFormatted: Int
+        var amountColor: Color
+        let sign: String
+        
+        valueToBeFormatted = abs(amount)
+        if case .USD = currency {
+            amountColor = Palette.green.swiftUI
+        } else if amount > 0 {
+            amountColor = positiveColor
+        } else if amount < 0 {
+            amountColor = negativeColor
+        } else {
+            amountColor = Palette.black.swiftUI
+        }
+        
+        sign = amount > 0 ? "+" : "-"
+        
+        let valueString = NumberFormatter.formatNumber(valueToBeFormatted, options: [.minFractionDigits(2)])
+        let valueSeparator = valueString.components(separatedBy: NumberFormatter.customCurrencyDecimalSeparator)
+        
+        var signValueAttributed = AttributedString(hasSign ? sign : "")
+        signValueAttributed.foregroundColor = amountColor
+        
+        var currencyValueAttributed = AttributedString(currency?.symbol ?? "")
+        currencyValueAttributed.foregroundColor = amountColor.opacity(decimalAlpha)
+        
+        var amountValueAttributed = AttributedString(valueSeparator[0])
+        amountValueAttributed.foregroundColor = amountColor
+        
+        let decimal = valueSeparator.count == 1 ? "" : NumberFormatter.customCurrencyDecimalSeparator + valueSeparator[1]
+        var decimalValueAttributed = AttributedString(decimal)
+        decimalValueAttributed.foregroundColor = amountColor.opacity(decimalAlpha)
+        
+        if currency != nil && !hasSign {
+            let currencyAttributed = "{CURRENCY} {AMOUNT}{CENTS}"
+                .replacingOccurrences(of: [
+                    "{CURRENCY}": currencyValueAttributed,
+                    "{AMOUNT}": amountValueAttributed,
+                    "{CENTS}": decimalValueAttributed])
+            attributed.append(currencyAttributed)
+        } else if valueToBeFormatted == 0 {
+            let amountAttributed = "{AMOUNT}{CENTS}"
+                .replacingOccurrences(of: [
+                    "{AMOUNT}": amountValueAttributed,
+                    "{CENTS}": decimalValueAttributed])
+            attributed.append(amountAttributed)
+        } else {
+            let signAttributed = "{SIGN} {AMOUNT}{CENTS}"
+                .replacingOccurrences(of: [
+                    "{SIGN}": signValueAttributed,
+                    "{AMOUNT}": amountValueAttributed,
+                    "{CENTS}": decimalValueAttributed])
+            attributed.append(signAttributed)
+        }
+        return attributed
     }
 }

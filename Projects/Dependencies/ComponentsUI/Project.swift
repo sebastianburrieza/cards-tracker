@@ -6,7 +6,8 @@ let project = CardsTrackerProject
         name: "ComponentsUI",
         dependencies: [
             Dependency.utilities,
-            Dependency.resourcesUI
+            Dependency.resourcesUI,
+            Dependency.extensions
         ]
     )
     .build()

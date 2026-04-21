@@ -34,6 +34,12 @@ struct CardSettingsView: View {
         .safeAreaInset(edge: .top) {
             headerView
         }
+        .popup(icon: Image(systemName: "checkmark.circle.fill"),
+               text: viewModel.popupText,
+               duration: 2.0,
+               isPresented: $viewModel.showPopup,
+               completion: { viewModel.showPopup = false
+        })
         .toastErrorView(title: viewModel.errorTitle ?? "",
                         message: viewModel.errorMessage,
                         duration: 3,
@@ -85,6 +91,8 @@ struct CardSettingsView: View {
             }
 
             Spacer()
+            
+            activeBadge
         }
     }
     
@@ -126,10 +134,6 @@ struct CardSettingsView: View {
                         .foregroundColor(Palette.grayMedium.swiftUI)
                         .multilineTextAlignment(.leading)
                 }
-
-                Spacer()
-
-                activeBadge
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 16)

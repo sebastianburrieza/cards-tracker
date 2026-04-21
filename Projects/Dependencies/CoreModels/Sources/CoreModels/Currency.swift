@@ -48,7 +48,7 @@ extension Currency: CurrencyProtocol {
 
     public var color: Palette {
         switch self {
-        case .ARS: return .primary
+        case .ARS: return .black
         case .USD: return .green
         }
     }

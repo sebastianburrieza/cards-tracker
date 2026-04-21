@@ -66,7 +66,7 @@ final class TransactionsListViewModel {
             switch result {
             case .success(let page):
                 listDataSource.update(with: page)
-                withAnimation(.smooth(duration: 0.3, extraBounce: 0.2)) {
+                withAnimation(.smooth(duration: 0.4, extraBounce: 0.2)) {
                     viewState = listDataSource.isEmpty ? .noData : .hasData(listDataSource.rows)
                     isLoading = false
                 }
