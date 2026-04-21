@@ -10,12 +10,14 @@ struct CardView: View {
     
     @ObservedObject var viewModel: CardViewModel = .init()
     
+    private var brand: CardBrand?
     private var height: CGFloat = 200
     private var isShadow: Bool = true
     private var isPaused: Bool = false
     private var lastFour: String?
     
     init(type: CardType = .creditPlastic,
+         brand: CardBrand? = nil,
          color: ColorCode = .PINK,
          hexa: String? = nil,
          size: CGFloat,
@@ -23,10 +25,13 @@ struct CardView: View {
          lastFour: String? = nil,
          isShadow: Bool = true) {
         self.viewModel = viewModel
+        
+        self.brand = brand
         self.height = size
         self.isShadow = isShadow
         self.isPaused = isPaused
         self.lastFour = lastFour
+        
         viewModel.draw(type: type, color: color, hexa: hexa)
     }
 
@@ -89,7 +94,7 @@ struct CardView: View {
             .isHidden(viewModel.shouldShowVirtualLabel)
             .blur(radius: isPaused ? 0.5 : 0)
                 
-            brand
+            brandImage
                 .offset(x: height * 0.11, y: height * 0.37)
                 .blur(radius: isPaused ? 0.5 : 0)
         }
@@ -113,7 +118,7 @@ struct CardView: View {
             .isHidden(viewModel.shouldShowVirtualLabel)
             .blur(radius: isPaused ? 2 : 0)
                 
-            brand
+            brandImage
                 .offset(x: height * 0.27, y: height * 0.08)
                 .blur(radius: isPaused ? 2 : 0)
             
@@ -136,10 +141,11 @@ struct CardView: View {
     }
     
     @ViewBuilder
-    private var brand: some View {
+    private var brandImage: some View {
         let width = height * 0.4
         let height = height * 0.4
-        Image(["visa", "mastercard"].randomElement() ?? "visa")
+        let brandString = brand?.rawValue ?? "visa"
+        Image(brandString)
             .renderingMode(.original)
             .resizable()
             .aspectRatio(contentMode: .fit)

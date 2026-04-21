@@ -51,11 +51,11 @@ final class CardListItemViewModel {
     // MARK: - Card info
 
     var bankName: String { card.bankName }
-
+    
     var typeLabel: String {
         switch card.type {
-        case .creditPlastic, .creditVirtual: return "Crédito"
-        case .debitPlastic, .debitVirtual: return "Débito"
+        case .creditPlastic, .creditVirtual: return "CREDIT".localized
+        case .debitPlastic, .debitVirtual: return "DEBIT".localized
         case .skeleton, .failure: return ""
         }
     }

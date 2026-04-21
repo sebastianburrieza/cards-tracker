@@ -16,6 +16,7 @@ public struct Card: Identifiable, Hashable, Codable {
     public let holderName: String
     public let bankName: String
     public let lastFourDigits: String
+    public let brand: CardBrand
 
     public let limit: Int
     public let available: Int
@@ -34,6 +35,7 @@ public struct Card: Identifiable, Hashable, Codable {
                 holderName: String,
                 bankName: String = "",
                 lastFourDigits: String = "",
+                brand: CardBrand = .mastercard,
                 limit: Int,
                 available: Int,
                 closingDate: Date,
@@ -46,12 +48,14 @@ public struct Card: Identifiable, Hashable, Codable {
         self.holderName = holderName
         self.bankName = bankName
         self.lastFourDigits = lastFourDigits
+        self.brand = brand
         self.limit = limit
         self.available = available
         self.closingDate = closingDate
         self.dueDate = dueDate
         self.isPaused = isPaused
     }
+    
 
     // MARK: - Mutations
 
@@ -59,16 +63,25 @@ public struct Card: Identifiable, Hashable, Codable {
     /// Because `Card` is a struct with `let` properties we can't mutate in place —
     /// this is the Swift equivalent of Kotlin's `data class copy(isPaused = ...)`.
     public func copy(isPaused: Bool) -> Card {
-        Card(id: id, type: type, color: color, hexa: hexa,
-             holderName: holderName, bankName: bankName, lastFourDigits: lastFourDigits,
-             limit: limit, available: available,
-             closingDate: closingDate, dueDate: dueDate, isPaused: isPaused)
+        Card(id: id,
+             type: type,
+             color: color,
+             hexa: hexa,
+             holderName: holderName,
+             bankName: bankName,
+             lastFourDigits: lastFourDigits,
+             brand: brand,
+             limit: limit,
+             available: available,
+             closingDate: closingDate,
+             dueDate: dueDate,
+             isPaused: isPaused)
     }
 
     // MARK: - Codable
 
     enum CodingKeys: String, CodingKey {
-        case id, type, color, hexa, holderName, bankName, lastFourDigits
+        case id, type, color, hexa, holderName, bankName, lastFourDigits, brand
         case limit, available, closingDate, dueDate, isPaused
     }
 
@@ -81,6 +94,7 @@ public struct Card: Identifiable, Hashable, Codable {
         holderName = try container.decode(String.self, forKey: .holderName)
         bankName = try container.decodeIfPresent(String.self, forKey: .bankName) ?? ""
         lastFourDigits = try container.decodeIfPresent(String.self, forKey: .lastFourDigits) ?? ""
+        brand = try container.decodeIfPresent(CardBrand.self, forKey: .brand) ?? .mastercard
         limit = try container.decode(Int.self, forKey: .limit)
         available = try container.decode(Int.self, forKey: .available)
         closingDate = try container.decode(Date.self, forKey: .closingDate)
@@ -101,6 +115,11 @@ public enum CardType: String, Codable {
     case failure
 }
 
+public enum CardBrand: String, Codable {
+    case visa
+    case mastercard
+}
+
 public enum ColorCode: String, Codable {
     case WHITE
     case PINK
@@ -108,6 +127,31 @@ public enum ColorCode: String, Codable {
     case GREEN
     case PURPLE
     case ORANGE
-    
+    case BLUE
+
     case SKELETON
+}
+
+public extension Card {
+    
+    static func skeleton(id: String = UUID().uuidString,
+                         type: CardType = .creditPlastic,
+                         color: ColorCode = .SKELETON,
+                         hexa: String? = nil,
+                         holderName: String = "Sebastian A Burrieza",
+                         bankName: String = "New Bank Name",
+                         limit: Int = 220000000,
+                         available: Int = 33250000,
+                         closingDate: Date = Date(timeIntervalSince1970: 1293044800),
+                         dueDate: Date = Date(timeIntervalSince1970: 1293044800)) -> Card {
+        .init(id: id,
+              type: type,
+              color: color,
+              hexa: hexa,
+              holderName: holderName,
+              limit: limit,
+              available: available,
+              closingDate: closingDate,
+              dueDate: dueDate)
+    }
 }

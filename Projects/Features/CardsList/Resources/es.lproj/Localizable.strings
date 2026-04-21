@@ -6,12 +6,23 @@
 "DUEDATE_PLURAL" = "Vence en %d días";
 
 /* Card Detail */
-"DETAIL_TITLE" = "Consumos";
+"DETAIL_TITLE" = "Consumido";
 "DETAIL_AVAILABLE" = "Disponible %@";
 "DETAIL_PAUSE" = "Pausar";
 "DETAIL_ACTIVATE" = "Activar";
 "DETAIL_REPORT" = "Reportar";
+"DETAIL_FILTER_ALL" = "Todas";
+"DETAIL_FILTER_INSTALLMENTS" = "En cuotas";
+"DETAIL_FILTER_DOLLARS" = "En dólares";
 
+
+/* Card Settings */
+"SETTINGS_TITLE" = "Ajustes";
+"SETTINGS_ACTIVE_BADGE" = "Activa";
+"SETTINGS_PAUSE_TITLE" = "Pausar tarjeta";
+"SETTINGS_PAUSE_SUBTITLE" = "Se bloquean nuevos consumos. Podés reactivarla cuando quieras.";
+"SETTINGS_REPORT_TITLE" = "Reportar robo o pérdida";
+"SETTINGS_REPORT_SUBTITLE" = "Se bloquean toda la tarjeta inmediatamente y se envía una nueva.";
 
 /* Errors */
 "ERROR_TITLE_GENERIC" = "Algo salió mal";
@@ -24,3 +35,5 @@
 
 "PAUSED" = "Pausada";
 "VIRTUAL" = "Virtual";
+"CREDIT" = "Crédito";
+"DEBIT" = "Débito";

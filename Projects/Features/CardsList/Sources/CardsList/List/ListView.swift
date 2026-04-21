@@ -28,7 +28,6 @@ struct ListView: View {
                     .shadow(color: Palette.staticBlack.swiftUI.opacity(0.3), radius: 8, x: 0, y: 3)
                 )
         }
-        .task { await viewModel.fetchCards() }
         .toastErrorView(title: viewModel.errorTitle ?? "",
                         message: viewModel.errorMessage,
                         duration: 3,
