@@ -16,10 +16,10 @@ struct CreatePasswordView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 32) {
-                Spacer()
-
                 header
-
+                    .padding(.top, 120)
+                    .padding(.bottom, 40)
+                
                 fieldsSection
 
                 Spacer()
@@ -59,11 +59,14 @@ struct CreatePasswordView: View {
                 onSubmit: viewModel.createPassword
             )
 
-            if let error = viewModel.errorMessage {
-                Text(error)
-                    .font(.footnote)
-                    .foregroundStyle(Palette.red.swiftUI)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+            if viewModel.isError {
+                Text(viewModel.errorMessage)
+                    .font(Fonts.medium(size: 15))
+                    .foregroundStyle(Palette.white.swiftUI)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(Palette.red.swiftUI)
+                    .cornerRadius(25, antialiased: true)
             }
 
             Button(action: viewModel.createPassword) {
