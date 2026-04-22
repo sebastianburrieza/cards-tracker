@@ -5,6 +5,7 @@ import Factory
 import Navigation
 import CardsList
 import CardsTransactionDetail
+import Authentication
 
 /// App-level entry point for all route handler, deep link parser,
 /// and Factory dependency registrations.
@@ -32,6 +33,7 @@ final class AppRouter {
 
     private static func registerAllRouteHandlers() {
         let routerService = Container.shared.routerService()
+        routerService.register(routeHandler: AuthenticationRouteHandler(routerService: routerService))
         routerService.register(routeHandler: CardsListRouteHandler(routerService: routerService))
         routerService.register(routeHandler: TransactionDetailRouteHandler())
     }

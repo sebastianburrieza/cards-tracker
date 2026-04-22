@@ -1,10 +1,5 @@
-//
-//  ShimmerModifier.swift
-//  CardsTransactionDetail
-//
-//  Created by Catalina Burrieza on 16/04/2026.
-//  Copyright © 2026 CardsTracker. All rights reserved.
-//
+//  ShimmerEffect.swift
+//  Created by Sebastian Burrieza on 16/04/2026.
 
 import SwiftUI
 

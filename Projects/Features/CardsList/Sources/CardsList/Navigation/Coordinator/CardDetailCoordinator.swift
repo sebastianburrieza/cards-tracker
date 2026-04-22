@@ -20,6 +20,9 @@ final class CardDetailCoordinator: CoordinatorProtocol {
     var router: RouterServiceProtocol
     private let card: Card
 
+    /// Called when the user taps Log Out in settings. AppCoordinator subscribes via ListCoordinator.
+    var onLogout: (() -> Void)?
+
     init(navigationController: UINavigationController, router: RouterServiceProtocol, card: Card) {
         self.navigationController = navigationController
         self.router = router
@@ -48,6 +51,10 @@ final class CardDetailCoordinator: CoordinatorProtocol {
     func navigateToSettings() {
         let controller = buildController(for: .settings)
         navigationController.pushViewController(controller, animated: true)
+    }
+
+    func handleLogout() {
+        onLogout?()
     }
 
 }

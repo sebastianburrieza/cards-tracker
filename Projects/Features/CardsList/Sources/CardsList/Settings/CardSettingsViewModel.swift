@@ -9,6 +9,7 @@ import CoreModels
 
 protocol CardSettingsNavigationDelegate: AnyObject {
     func navigateToPrevious()
+    func navigateToLogout()
 }
 
 @Observable
@@ -33,6 +34,12 @@ final class CardSettingsViewModel {
     init(card: Card) {
         self.card = card
         self.isPaused = card.isPaused
+    }
+
+    // MARK: - Auth
+
+    func logout() {
+        delegate?.navigateToLogout()
     }
 
     // MARK: - Write operations

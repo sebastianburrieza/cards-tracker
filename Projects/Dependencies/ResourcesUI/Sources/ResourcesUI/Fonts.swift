@@ -19,6 +19,10 @@ public final class Fonts {
     public static func bold(size: CGFloat) -> UIFont {
         UIFont.systemFont(ofSize: size, weight: .bold).rounded
     }
+    
+    public static func semibold(size: CGFloat) -> UIFont {
+        UIFont.systemFont(ofSize: size, weight: .semibold).rounded
+    }
 
     public static func medium(size: CGFloat) -> UIFont {
         UIFont.systemFont(ofSize: size, weight: .medium).rounded
@@ -40,6 +44,10 @@ public final class Fonts {
 
     public static func bold(size: CGFloat) -> Font {
         Font(Fonts.bold(size: size) as CTFont)
+    }
+    
+    public static func semibold(size: CGFloat) -> Font {
+        Font(Fonts.semibold(size: size) as CTFont)
     }
 
     public static func medium(size: CGFloat) -> Font {

@@ -3,6 +3,7 @@ import ProjectDescription
 public enum Feature: String, CaseIterable, DependencyProtocol, Sendable {
     case cardsList
     case cardsTransactionDetail
+    case authentication
 
     public var path: Path {
         .relativeToRoot("Projects/Features/\(rawValue.capitalizingFirstLetter())")

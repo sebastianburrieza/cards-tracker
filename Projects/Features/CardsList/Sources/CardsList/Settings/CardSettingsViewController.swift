@@ -30,4 +30,8 @@ extension CardSettingsViewController: CardSettingsNavigationDelegate {
     func navigateToPrevious() {
         coordinator?.navigateToPrevious(true)
     }
+
+    func navigateToLogout() {
+        coordinator?.handleLogout()
+    }
 }

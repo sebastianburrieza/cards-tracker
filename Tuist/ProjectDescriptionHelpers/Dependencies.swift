@@ -13,6 +13,7 @@ public enum Dependency: String, CaseIterable, DependencyProtocol, Sendable {
     case componentsUI
     case coreModels
     case coreServices
+    case coreAuth
     case resourcesUI
 
     public var path: Path {

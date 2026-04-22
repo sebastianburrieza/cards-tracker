@@ -1,0 +1,17 @@
+/* Login */
+"LOGIN_TITLE" = "Seguimiento de tarjetas";
+"LOGIN_SUBTITLE" = "Ingresá tu contraseña para continuar";
+"LOGIN_PASSWORD_PLACEHOLDER" = "Contraseña";
+"LOGIN_BUTTON" = "Ingresar";
+"LOGIN_ERROR_EMPTY" = "Por favor ingresá tu contraseña.";
+"LOGIN_ERROR_INCORRECT" = "Contraseña incorrecta. Intentá de nuevo.";
+
+/* Create Password */
+"CREATE_PASSWORD_TITLE" = "Bienvenido a Seguimiento de tarjetas";
+"CREATE_PASSWORD_SUBTITLE" = "Creá una contraseña para proteger tus tarjetas";
+"CREATE_PASSWORD_PLACEHOLDER" = "Contraseña";
+"CREATE_PASSWORD_CONFIRM_PLACEHOLDER" = "Confirmá la contraseña";
+"CREATE_PASSWORD_BUTTON" = "Crear contraseña";
+"CREATE_PASSWORD_ERROR_TOO_SHORT" = "La contraseña debe tener al menos 4 caracteres.";
+"CREATE_PASSWORD_ERROR_MISMATCH" = "Las contraseñas no coinciden.";
+"CREATE_PASSWORD_ERROR_SAVE" = "No se pudo guardar la contraseña. Intentá de nuevo.";

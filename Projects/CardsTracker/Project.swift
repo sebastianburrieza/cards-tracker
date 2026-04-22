@@ -20,8 +20,10 @@ let project = Project(
             dependencies: [
                 .external(name: "Factory"),
                 Dependency.navigation.target,
+                Dependency.coreAuth.target,
                 Feature.cardsList.target,
-                Feature.cardsTransactionDetail.target
+                Feature.cardsTransactionDetail.target,
+                Feature.authentication.target
             ]
         ),
         .unitTest(name: "CardsTracker", dependencies: [
