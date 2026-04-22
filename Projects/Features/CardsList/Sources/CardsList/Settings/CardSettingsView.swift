@@ -25,6 +25,7 @@ struct CardSettingsView: View {
                     VStack(spacing: 12) {
                         pauseRow
                         reportRow
+                        logoutRow
                     }
                     .padding(.horizontal, 16)
                     .padding(.top, 16)
@@ -180,6 +181,38 @@ struct CardSettingsView: View {
             )
         }
         .disabled(viewModel.isSubmitting)
+        .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    private var logoutRow: some View {
+        Button(action: viewModel.logout) {
+            HStack(spacing: 12) {
+                Image(systemName: "rectangle.portrait.and.arrow.right")
+                    .font(Fonts.regular(size: 26))
+                    .foregroundColor(Palette.orange.swiftUI)
+                    .frame(width: 35, height: 35)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Log Out")
+                        .font(Fonts.medium(size: 17))
+                        .foregroundColor(Palette.black.swiftUI)
+
+                    Text("Sign out of your account")
+                        .font(Fonts.regular(size: 13))
+                        .foregroundColor(Palette.grayMedium.swiftUI)
+                }
+
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 16)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Palette.backgroundLight.swiftUI)
+                    .shadow(color: Palette.staticBlack.swiftUI.opacity(0.1), radius: 5, x: 0, y: 3)
+            )
+        }
         .buttonStyle(.plain)
     }
 

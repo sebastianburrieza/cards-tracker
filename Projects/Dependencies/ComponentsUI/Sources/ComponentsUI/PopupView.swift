@@ -24,7 +24,8 @@ struct PopupView: View {
             .onChange(of: isPresented) { _, isPresented in
                 if isPresented {
                     animate(isShown: true)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
+                    Task { @MainActor in
+                        try? await Task.sleep(seconds: duration)
                         animate(isShown: false) {
                             completion?()
                         }
@@ -91,8 +92,8 @@ struct PopupView: View {
                 backgroundOpacity = 1
                 offsetY = 0
             }
-    
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            Task { @MainActor in
+                try? await Task.sleep(seconds: 0.3)
                 completion?()
             }
     
@@ -103,7 +104,8 @@ struct PopupView: View {
                 offsetY = 30
             }
     
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            Task { @MainActor in
+                try? await Task.sleep(seconds: 0.2)
                 completion?()
             }
         }

@@ -1,4 +1,4 @@
-//  Skeleton.swift
+//  SkeletonEffect.swift
 //  Created by Sebastian Burrieza on 01/04/2026.
 
 import SwiftUI

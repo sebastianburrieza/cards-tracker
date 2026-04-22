@@ -17,6 +17,9 @@ public final class ListCoordinator: CoordinatorProtocol {
     public var navigationController: UINavigationController
     public var router: RouterServiceProtocol
 
+    /// Called when the user logs out from any card's settings screen.
+    public var onLogout: (() -> Void)?
+
     public init(navigationController: UINavigationController, router: RouterServiceProtocol) {
         self.navigationController = navigationController
         self.router = router
@@ -40,6 +43,7 @@ public final class ListCoordinator: CoordinatorProtocol {
                 router: router,
                 card: card
             )
+            coordinator.onLogout = onLogout
             return coordinator.start()
         }
     }

@@ -16,7 +16,7 @@ protocol ListNavigationDelegate: AnyObject {
 @Observable
 final class ListViewModel {
 
-    var cards: [Card] = [Card.skeleton(), Card.skeleton(), Card.skeleton()]
+    var cards: [Card] = []
     var totalConsumed: Int = 0
     var totalAvailable: Int = 0
     var fontColor: Color = Palette.white.swiftUI
