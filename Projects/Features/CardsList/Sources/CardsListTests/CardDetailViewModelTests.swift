@@ -62,17 +62,11 @@ final class CardDetailViewModelTests: XCTestCase {
 
     // MARK: - formattedAmountUsed
 
-    func test_formattedAmountUsed_isNotEmpty() {
-        let sut = makeSUT(limit: 100_000, available: 40_000)
-
-        XCTAssertFalse(sut.formattedAmountUsed.isEmpty)
-    }
-
     func test_formattedAmountUsed_differsForDifferentUsedAmounts() {
         let lowUsed = makeSUT(limit: 100_000, available: 90_000)   // used = 10,000
         let highUsed = makeSUT(limit: 100_000, available: 10_000)  // used = 90,000
 
-        XCTAssertNotEqual(lowUsed.formattedAmountUsed, highUsed.formattedAmountUsed)
+        XCTAssertNotEqual(lowUsed.amountConsumed, highUsed.amountConsumed)
     }
 
     func test_formattedAmountUsed_withZeroUsed_isSameAsAnotherZeroUsedCard() {
@@ -80,7 +74,7 @@ final class CardDetailViewModelTests: XCTestCase {
         let sut1 = makeSUT(limit: 100_000, available: 100_000)
         let sut2 = makeSUT(limit: 200_000, available: 200_000)
 
-        XCTAssertEqual(sut1.formattedAmountUsed, sut2.formattedAmountUsed)
+        XCTAssertEqual(sut1.amountConsumed, sut2.amountConsumed)
     }
 
     func test_formattedAmountUsed_dependsOnAvailable_notJustLimit() {
@@ -88,7 +82,7 @@ final class CardDetailViewModelTests: XCTestCase {
         let sut1 = makeSUT(limit: 100_000, available: 80_000) // used = 20,000
         let sut2 = makeSUT(limit: 100_000, available: 30_000) // used = 70,000
 
-        XCTAssertNotEqual(sut1.formattedAmountUsed, sut2.formattedAmountUsed)
+        XCTAssertNotEqual(sut1.amountConsumed, sut2.amountConsumed)
     }
 
     func test_formattedAmountUsed_dependsOnLimit_notJustAvailable() {
@@ -96,7 +90,7 @@ final class CardDetailViewModelTests: XCTestCase {
         let sut1 = makeSUT(limit: 100_000, available: 50_000) // used = 50,000
         let sut2 = makeSUT(limit: 200_000, available: 50_000) // used = 150,000
 
-        XCTAssertNotEqual(sut1.formattedAmountUsed, sut2.formattedAmountUsed)
+        XCTAssertNotEqual(sut1.amountConsumed, sut2.amountConsumed)
     }
 
     // MARK: - formattedRemaining

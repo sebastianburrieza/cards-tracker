@@ -164,8 +164,8 @@ final class CardsListViewModelTests: XCTestCase {
 
         await viewModel.fetchCards()
 
-        XCTAssertEqual(viewModel.errorTitle, "Connection error")
-        XCTAssertEqual(viewModel.errorMessage, "Check your internet connection and try again.")
+        XCTAssertEqual(viewModel.errorTitle, "Error de conexión")
+        XCTAssertEqual(viewModel.errorMessage, "Comprobá la conexión a internet e intenta de nuevo.")
     }
 
     func test_fetchCards_failure_unauthorized() async throws {
@@ -193,6 +193,10 @@ final class MockDelegate: ListNavigationDelegate {
     func navigateToDetail(card: Card) {
         navigateToDetailCallCount += 1
         capturedCard = card
+    }
+    
+    func navigateToAddCard() {
+        
     }
 
     func showError(_ error: ServerError) {
