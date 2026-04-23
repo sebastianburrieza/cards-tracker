@@ -16,8 +16,8 @@ struct LoginView: View {
 
             VStack(spacing: 32) {
                 header
-                    .padding(.top, 120)
-                    .padding(.bottom, 60)
+                    .padding(.top, 90)
+                    .padding(.bottom, 30)
                 
                 credentialsSection
 
