@@ -8,7 +8,7 @@ import Extensions
 import CoreModels
 
 @Observable
-final class TransactionItemViewModel: Equatable, Identifiable {
+final class TransactionItemViewModel: Equatable, Identifiable, Hashable {
 
     var transaction: CoreModels.Transaction
 

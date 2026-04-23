@@ -24,11 +24,10 @@ final class CardDetailViewController: UIHostingController<CardDetailView> {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
+        fetch()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
+    private func fetch() {
         Task {
             await viewModel.fetchTransactions()
         }

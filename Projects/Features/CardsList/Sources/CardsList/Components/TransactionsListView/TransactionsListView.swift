@@ -18,19 +18,23 @@ struct TransactionsListView: View {
             switch viewModel.filteredViewState {
             case .failure:
                 FailureTransactionsView()
+                    .background(Material.regular)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .shadow(color: Palette.staticBlack.swiftUI.opacity(0.1), radius: 8, x: 0, y: 2)
+                    .padding(.horizontal, 16)
                 
             case .noData:
                 NoTransactionsView()
+                    .background(Material.regular)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .shadow(color: Palette.staticBlack.swiftUI.opacity(0.1), radius: 8, x: 0, y: 2)
+                    .padding(.horizontal, 16)
                 
             case .hasData(let items):
                 transactionsView(items)
 
             }
         }
-        .background(Material.regular)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: Palette.staticBlack.swiftUI.opacity(0.1), radius: 8, x: 0, y: 2)
-        .padding(.horizontal, 16)
         .onAppear {
             viewModel.resetTransactions()
             Task {
@@ -43,22 +47,25 @@ struct TransactionsListView: View {
     private func transactionsView(_ items: [TransactionItemViewModel]) -> some View {
         // LazyVStack: only renders transaction rows that are currently visible.
         LazyVStack {
-            ForEach(Array(items.enumerated()), id: \.element.transaction.id) { index, item in
+            ForEachAnimation(items) { item in
+                let index = items.firstIndex(of: item) ?? 0
                 TransactionItemView(viewModel: item, onTapped: { transaction in
-                    transactionTapped(transaction) })
-                .frame(height: 50)
-                .padding(.horizontal, 5)
-                .transition(.opacity)
-                .onAppear {
-                    Task {
-                        await viewModel.fetchNextPage(index: index)
+                    transactionTapped(transaction)
+                })
+                    .id(item.transaction.id)
+                    .frame(height: 50)
+                    .background(Material.regular)
+                    .clipShape(RoundedRectangle(cornerRadius: 25))
+                    .shadow(color: Palette.staticBlack.swiftUI.opacity(0.1), radius: 4, x: 0, y: 2)
+                    .padding(.horizontal, 16)
+                    .padding(.horizontal, 5)
+                    .transition(.opacity)
+                    .onAppear {
+                        Task {
+                            await viewModel.fetchNextPage(index: index)
+                        }
                     }
-                }
-                .isSkeletonView(viewModel.isLoading)
-
-                if index < items.count - 1 {
-                    Divider()
-                }
+                    .isSkeletonView(viewModel.isLoading)
             }
         }
     }
