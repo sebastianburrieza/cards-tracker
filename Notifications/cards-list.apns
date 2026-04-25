@@ -1,0 +1,10 @@
+{
+    "Simulator Target Bundle": "com.cardsTracker.app",
+    "aps": {
+        "alert": "Compra con tarjeta de crédito",
+        "sound": "default",
+        "badge": 1
+    },
+    "type": "purchase",
+    "cardId": "card-456-test"
+}

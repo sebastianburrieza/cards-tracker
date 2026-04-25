@@ -9,6 +9,12 @@ public protocol AuthServiceProtocol: Sendable {
     func saveCredentials(password: String) throws
     func login(password: String) -> Bool
     func logout()
+
+    /// Returns the API Bearer token stored in Keychain, or `nil` if not present.
+    func getAccessToken() -> String?
+
+    /// Persists an API Bearer token in Keychain.
+    func saveAccessToken(_ token: String) throws
 }
 
 public final class AuthService: @unchecked Sendable, AuthServiceProtocol {
@@ -16,6 +22,7 @@ public final class AuthService: @unchecked Sendable, AuthServiceProtocol {
     private enum Keys {
         static let password = "com.cardsTracker.auth.password"
         static let isLoggedIn = "com.cardsTracker.auth.isLoggedIn"
+        static let accessToken = "com.cardsTracker.auth.accessToken"
     }
 
     private let keychain: any KeychainServiceProtocol
@@ -53,5 +60,13 @@ public final class AuthService: @unchecked Sendable, AuthServiceProtocol {
 
     public func logout() {
         userDefaults.set(false, forKey: Keys.isLoggedIn)
+    }
+
+    public func getAccessToken() -> String? {
+        keychain.read(key: Keys.accessToken)
+    }
+
+    public func saveAccessToken(_ token: String) throws {
+        try keychain.save(key: Keys.accessToken, value: token)
     }
 }

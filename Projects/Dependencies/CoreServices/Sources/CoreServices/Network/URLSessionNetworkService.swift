@@ -15,11 +15,25 @@ public final class URLSessionNetworkService: NetworkServiceProtocol {
 
     private let session: URLSession
     private let decoder: JSONDecoder
-    private let tokenProvider: () -> String?
+    private let tokenProvider: @Sendable () -> String?
 
-    public init(session: URLSession = .shared, tokenProvider: @escaping () -> String? = { nil }) {
+    /// Optional async closure called on a 401 response to obtain a refreshed token.
+    /// When present, the original request is retried once with the new token.
+    /// When `nil`, a 401 is propagated immediately as ``NetworkError/invalidResponse(statusCode:)``.
+    ///
+    /// - Note: Concurrent 401s are coalesced by ``TokenRefreshCoordinator`` — only one
+    ///   refresh call is ever in flight at a time, regardless of how many requests fail simultaneously.
+    private let tokenRefresher: (@Sendable () async throws -> String?)?
+    private let refreshCoordinator = TokenRefreshCoordinator()
+
+    public init(
+        session: URLSession = .shared,
+        tokenProvider: @Sendable @escaping () -> String? = { nil },
+        tokenRefresher: (@Sendable () async throws -> String?)? = nil
+    ) {
         self.session = session
         self.tokenProvider = tokenProvider
+        self.tokenRefresher = tokenRefresher
 
         let decoder = JSONDecoder()
         // Real backends typically send dates as Unix timestamps (seconds since epoch).
@@ -44,14 +58,35 @@ public final class URLSessionNetworkService: NetworkServiceProtocol {
 
     // MARK: - Private
 
-    /// Authorizes the request, executes it, validates the HTTP status, and returns raw data.
+    /// Executes the request with the current token. On 401, attempts a token refresh
+    /// and retries once if a `tokenRefresher` is configured.
+    ///
+    /// Concurrent 401s are serialized by ``TokenRefreshCoordinator``:
+    /// only one refresh runs at a time, all waiting requests reuse the result.
     private func execute(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
-        var authorizedRequest = request
-        if let token = tokenProvider() {
-            authorizedRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        do {
+            return try await performAuthorized(request, token: tokenProvider())
+        } catch NetworkError.invalidResponse(let statusCode) where statusCode == 401 {
+            guard let refresher = tokenRefresher else {
+                throw NetworkError.invalidResponse(statusCode: 401)
+            }
+            try Task.checkCancellation()
+            guard let newToken = try await refreshCoordinator.refresh(using: refresher) else {
+                // Refresher ran but returned no token — propagate the original 401.
+                throw NetworkError.invalidResponse(statusCode: 401)
+            }
+            return try await performAuthorized(request, token: newToken)
+        }
+    }
+
+    /// Attaches the Bearer token (if any), fires the request, and validates the HTTP status.
+    private func performAuthorized(_ request: URLRequest, token: String?) async throws -> (Data, HTTPURLResponse) {
+        var authorized = request
+        if let token {
+            authorized.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
 
-        let (data, response) = try await session.data(for: authorizedRequest)
+        let (data, response) = try await session.data(for: authorized)
 
         guard let http = response as? HTTPURLResponse else {
             throw NetworkError.invalidResponse(statusCode: 0)

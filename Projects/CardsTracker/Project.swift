@@ -21,6 +21,7 @@ let project = Project(
                 .external(name: "Factory"),
                 Dependency.navigation.target,
                 Dependency.coreAuth.target,
+                Dependency.coreServices.target,
                 Feature.cardsList.target,
                 Feature.cardsTransactionDetail.target,
                 Feature.authentication.target

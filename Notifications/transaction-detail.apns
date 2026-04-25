@@ -1,0 +1,10 @@
+{
+    "Simulator Target Bundle": "com.cardsTracker.app",
+    "aps": {
+        "alert": "Nueva transacción en tu tarjeta",
+        "sound": "default",
+        "badge": 1
+    },
+    "type": "transaction_detail",
+    "transactionId": "abc-123-test"
+}

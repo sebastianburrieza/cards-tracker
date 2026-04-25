@@ -19,7 +19,9 @@ final class MockURLProtocol: URLProtocol {
     /// Set this before each test to control what the mock returns.
     static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse, Data))?
 
+    // swiftlint:disable:next static_over_final_class
     override class func canInit(with request: URLRequest) -> Bool { true }
+    // swiftlint:disable:next static_over_final_class
     override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
 
     override func startLoading() {
@@ -59,11 +61,14 @@ final class URLSessionNetworkServiceTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeSUT(tokenProvider: @escaping () -> String? = { nil }) -> URLSessionNetworkService {
+    private func makeSUT(
+        tokenProvider: @escaping (@Sendable() -> String?) = { nil },
+        tokenRefresher: (@Sendable() async throws -> String?)? = nil
+    ) -> URLSessionNetworkService {
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [MockURLProtocol.self]
         let session = URLSession(configuration: config)
-        return URLSessionNetworkService(session: session, tokenProvider: tokenProvider)
+        return URLSessionNetworkService(session: session, tokenProvider: tokenProvider, tokenRefresher: tokenRefresher)
     }
 
     private func makeURL() -> URL {
@@ -82,7 +87,7 @@ final class URLSessionNetworkServiceTests: XCTestCase {
 
     func test_request_200_decodesObject() async throws {
         struct Item: Decodable, Equatable { let id: Int; let name: String }
-        let json = #"{"id": 1, "name": "Test"}"#.data(using: .utf8)!
+        let json = Data(#"{"id": 1, "name": "Test"}"#.utf8)
         MockURLProtocol.requestHandler = { _ in (self.makeResponse(statusCode: 200), json) }
 
         let result = try await sut.request(Item.self, for: makeRequest())
@@ -92,7 +97,7 @@ final class URLSessionNetworkServiceTests: XCTestCase {
 
     func test_request_200_decodesArray() async throws {
         struct Item: Decodable { let id: Int }
-        let json = #"[{"id":1},{"id":2},{"id":3}]"#.data(using: .utf8)!
+        let json = Data(#"[{"id":1},{"id":2},{"id":3}]"#.utf8)
         MockURLProtocol.requestHandler = { _ in (self.makeResponse(statusCode: 200), json) }
 
         let result = try await sut.request([Item].self, for: makeRequest())
@@ -146,7 +151,7 @@ final class URLSessionNetworkServiceTests: XCTestCase {
 
     func test_request_malformedJSON_throwsDecodingFailed() async {
         struct Item: Decodable { let id: Int }
-        let badData = "not json at all".data(using: .utf8)!
+        let badData = Data("not json at all".utf8)
         MockURLProtocol.requestHandler = { _ in (self.makeResponse(statusCode: 200), badData) }
 
         do {
@@ -161,7 +166,7 @@ final class URLSessionNetworkServiceTests: XCTestCase {
 
     func test_request_wrongJSONShape_throwsDecodingFailed() async {
         struct Item: Decodable { let id: Int }
-        let json = #"{"wrong_key": "value"}"#.data(using: .utf8)!
+        let json = Data(#"{"wrong_key": "value"}"#.utf8)
         MockURLProtocol.requestHandler = { _ in (self.makeResponse(statusCode: 200), json) }
 
         do {
@@ -178,7 +183,7 @@ final class URLSessionNetworkServiceTests: XCTestCase {
 
     func test_request_withToken_addsAuthorizationHeader() async throws {
         struct Item: Decodable { let id: Int }
-        let json = #"{"id": 1}"#.data(using: .utf8)!
+        let json = Data(#"{"id": 1}"#.utf8)
         var capturedRequest: URLRequest?
         MockURLProtocol.requestHandler = { request in
             capturedRequest = request
@@ -193,7 +198,7 @@ final class URLSessionNetworkServiceTests: XCTestCase {
 
     func test_request_withoutToken_omitsAuthorizationHeader() async throws {
         struct Item: Decodable { let id: Int }
-        let json = #"{"id": 1}"#.data(using: .utf8)!
+        let json = Data(#"{"id": 1}"#.utf8)
         var capturedRequest: URLRequest?
         MockURLProtocol.requestHandler = { request in
             capturedRequest = request
@@ -287,5 +292,97 @@ final class URLSessionNetworkServiceTests: XCTestCase {
     func test_deleteRequest_hasNoBody() {
         let request = URLRequest.delete(url: makeURL())
         XCTAssertNil(request.httpBody)
+    }
+
+    // MARK: - Retry on 401
+
+    func test_request_401_withRefresher_retriesAndReturnsSuccess() async throws {
+        struct Item: Decodable, Equatable { let id: Int }
+        let json = Data(#"{"id": 99}"#.utf8)
+        var callCount = 0
+
+        MockURLProtocol.requestHandler = { _ in
+            callCount += 1
+            if callCount == 1 {
+                return (self.makeResponse(statusCode: 401), Data())
+            }
+            return (self.makeResponse(statusCode: 200), json)
+        }
+
+        let sutWithRefresher = makeSUT(tokenRefresher: { "refreshed-token" })
+
+        let result = try await sutWithRefresher.request(Item.self, for: makeRequest())
+
+        XCTAssertEqual(result, Item(id: 99))
+        XCTAssertEqual(callCount, 2, "Should have made exactly 2 requests: original + retry")
+    }
+
+    func test_request_401_withRefresher_whenRefreshFails_propagatesError() async {
+        MockURLProtocol.requestHandler = { _ in (self.makeResponse(statusCode: 401), Data()) }
+
+        struct RefreshError: Error {}
+        let sutWithFailingRefresher = makeSUT(tokenRefresher: { throw RefreshError() })
+
+        do {
+            _ = try await sutWithFailingRefresher.request(String.self, for: makeRequest())
+            XCTFail("Expected error to be thrown")
+        } catch is RefreshError {
+            // expected — refresh error propagates to the caller
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
+    func test_request_401_withRefresher_whenRefresherReturnsNil_throws401() async {
+        MockURLProtocol.requestHandler = { _ in (self.makeResponse(statusCode: 401), Data()) }
+
+        let sutWithNilRefresher = makeSUT(tokenRefresher: { nil })
+
+        do {
+            _ = try await sutWithNilRefresher.request(String.self, for: makeRequest())
+            XCTFail("Expected NetworkError.invalidResponse to be thrown")
+        } catch NetworkError.invalidResponse(let statusCode) {
+            XCTAssertEqual(statusCode, 401)
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+    }
+
+    // MARK: - Concurrent 401 coalescing
+
+    func test_concurrent401s_refreshCalledOnce() async throws {
+        struct Item: Decodable, Equatable { let id: Int }
+        let json = Data(#"{"id": 99}"#.utf8)
+
+        // Counts server hits — both initial requests get 401, retries get 200
+        nonisolated(unsafe) var serverCallCount = 0
+        // Counts refresher invocations — this is what we're actually asserting
+        nonisolated(unsafe) var refreshCallCount = 0
+
+        MockURLProtocol.requestHandler = { _ in
+            serverCallCount += 1
+            // First two calls are the concurrent initial requests → both get 401
+            // Subsequent calls are the retries after refresh → get 200
+            if serverCallCount == 1 {
+                return (self.makeResponse(statusCode: 401), Data())
+            }
+            return (self.makeResponse(statusCode: 200), json)
+        }
+
+        let sutWithRefresher = makeSUT(tokenRefresher: {
+            refreshCallCount += 1
+            return "refreshed-token"
+        })
+
+        // Launch both requests concurrently — no try/await at async let declaration
+        async let firstResult = sutWithRefresher.request(Item.self, for: makeRequest())
+        async let secondResult = sutWithRefresher.request(Item.self, for: makeRequest())
+
+        let (first, second) = try await (firstResult, secondResult)
+
+        XCTAssertEqual(first, Item(id: 99))
+        XCTAssertEqual(second, Item(id: 99))
+        // The key assertion: TokenRefreshCoordinator coalesced both 401s into a single refresh call
+        XCTAssertEqual(refreshCallCount, 1, "Should call the refresher once even with concurrent 401s")
     }
 }

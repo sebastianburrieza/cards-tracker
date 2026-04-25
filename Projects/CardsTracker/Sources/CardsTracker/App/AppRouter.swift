@@ -3,6 +3,8 @@
 
 import Factory
 import Navigation
+import CoreAuth
+import CoreServices
 import CardsList
 import CardsTransactionDetail
 import Authentication
@@ -51,7 +53,18 @@ final class AppRouter {
     /// Registers singleton services and configures them with the app's root router.
     /// Add new Factory registrations here as the app grows.
     private static func registerAllDependencies() {
-
+        Container.shared.networkService.register {
+            URLSessionNetworkService(
+                tokenProvider: {
+                    Container.shared.authService().getAccessToken()
+                },
+                tokenRefresher: {
+                    // TODO: call POST /auth/refresh here when the real backend is ready.
+                    // Return the new access token string, or throw to propagate the 401.
+                    nil
+                }
+            )
+        }
     }
 }
 
